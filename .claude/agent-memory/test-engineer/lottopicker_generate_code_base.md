@@ -39,3 +39,11 @@ exists but `.github/workflows/windows-verification.yml` does not yet — a
 human needs to copy it once (GitHub App can't grant itself `workflows`
 permission). Deferred to DELIV-901 per Software Engineer's comment on #5;
 don't treat its absence as a failure on feature issues before then.
+
+**UI-001 pass (issue #6, 2026-09-05):** TP-UI-001's step 3 says "proceeds
+to ranking without error" but ranking (UI-002/CORE) isn't built yet — this
+is expected per the Implementation Plan's ordering, not a defect. Judge
+step 3 as satisfied if the tool exits 0 with no error on a well-formed
+config path, even though it doesn't yet actually rank anything. Re-check
+this note once UI-002/CORE land — at that point "proceeds to ranking"
+should mean real ranking output, and the looser bar no longer applies.
