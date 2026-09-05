@@ -41,3 +41,16 @@ issues are in flight at once.
    resolved by keeping both entries, never picking one — see
    [[shallow_clone_merge_base]] for the general "don't guess, verify"
    posture this shares.
+
+**Confirmed again on issue #11 (CORE-200) merging 2026-09-05**, three
+resets in a row before the push succeeded: first two rejections were
+doc-only commits from issue #10 (reset-and-redo, identical RTVM
+conflict both times — same two adjacent rows, e.g. CORE-200/CORE-201,
+each branch's own row stale relative to the other's already-merged
+update), the third was issue #12's real CORE-201 merge landing
+concurrently, which added the expected `src/CMakeLists.txt` conflict
+(comment text only — the actual `add_library(...)` file list
+auto-merged cleanly) *plus* a memory-file (`software-engineer/MEMORY.md`)
+conflict, same keep-both resolution. Rebuilt full suite after every
+redo; only the final one mattered (23/23, combining both features'
+tests) since nothing was pushed until then.

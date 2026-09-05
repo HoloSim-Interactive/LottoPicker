@@ -26,7 +26,8 @@ in `.github/AGENT_LABELS.md`.
 
 ## Known issues
 
-- [Concurrent trunk-merge race](concurrent_trunk_merge_race.md) — multiple issues merging to `main` around the same time causes repeated push rejections; reset-and-redo, expect a mechanical `src/CMakeLists.txt` source-list conflict.
+- [Concurrent trunk-merge race](concurrent_trunk_merge_race.md) — multiple issues merging to `main` around the same time causes repeated push rejections; reset-and-redo, expect a mechanical `src/CMakeLists.txt` source-list conflict. Confirmed a 3rd time on issue #11.
+- [Next line must match labels applied](next_line_must_match_labels_applied.md) — after a trunk merge, hand back to SE with `status:ready-for-rtvm-update`, not the `status:ready-for-commit` I inherited.
 
 - [Inspection-item direct-trunk commit](inspection_item_direct_trunk_commit.md) — on CORE-207/issue #8, Systems Engineer committed the RTVM status change straight to main instead of via CI/CD; check both directions of the diff before assuming the branch has the work.
 - [Direct-trunk commit recurred on issue #7](direct_trunk_commit_recurred_issue7.md) — recurred again on issue #12 (4th time); keep flagging each occurrence even though harmless so far.
