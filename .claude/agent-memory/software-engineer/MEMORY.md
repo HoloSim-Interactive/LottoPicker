@@ -28,6 +28,7 @@ in `.github/AGENT_LABELS.md`.
 - [CORE-204 ModelStore](core_204_model_store.md) — hash-check/build-or-load orchestration + DATA-OUT-301 serializer scope call, model-path-naming convention, main.cpp finally wired to ingestion (issue #16).
 - [CORE-203 RankingEngine](core_203_ranking_engine.md) — min-heap top-N over the full combo space (issue #17), the baselineCooc/DATA-OUT-301-v2 correctness gap it surfaced and fixed, ~43s real-run timing note.
 - [DATA-OUT-300 ranked-list structure](data_out_300_ranked_list_structure.md) — issue #19: struct already existed from CORE-203; only a dedicated `[DATA-OUT-300]`-tagged test (topN=5, per TP text) was the real gap.
+- [CORE-205 BacktestEngine](core_205_backtest_engine.md) — truncation/era-pool wiring (issue #20), plus two flagged formula judgment calls (percentile, chance-expected containment) pending Systems Engineer confirmation.
 
 ## Platform-specific notes
 
