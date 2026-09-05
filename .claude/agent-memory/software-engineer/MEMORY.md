@@ -22,6 +22,7 @@ in `.github/AGENT_LABELS.md`.
 - [CORE-200 DecayScorer](core_200_decay_scorer.md) — sorts history by date internally rather than trusting caller order; scope boundary vs. CORE-206 normalization (issue #11).
 - [UI-002 config parsing](ui_002_config_parsing.md) — Config::parse design (issue #9), key-check-order/malformed-line choices I made, and a pre-existing CsvFormatError/LottoPickerError inheritance gap flagged for whoever wires ingestion into main().
 - [DATA-IN-101 era tagging](data_in_101_era_tagging.md) — EraTable/EraTagger design (issue #10) and the missing-real-CSV gap escalated to Systems Engineer.
+- [CORE-206 PoolSizeNormalizer](core_206_pool_size_normalizer.md) — normalization via raw-score-minus-per-group-size-baseline shortcut (issue #14), and the kDefaultHalfLifeDraws duplication that became a real compile error and got consolidated.
 
 ## Platform-specific notes
 
