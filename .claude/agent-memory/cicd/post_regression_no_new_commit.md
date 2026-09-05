@@ -59,3 +59,9 @@ its already-done regression result), then SE's RTVM notes landed
 directly on trunk (ddcd2fa, a8694ae). `issue-19` confirmed ancestor of
 `main`. Same handling; brief hand-back to `agent:systems-engineer` with
 `status:ready-for-rtvm-update`.
+
+Confirmed a 7th time on issue #21 (OUT-400, 2026-09-05): original
+merge 6cd0bfc/v1.0.181, TE regression pass + SE's RTVM note landed
+directly on trunk (07e08ec), `issue-21` confirmed ancestor of `main`.
+Same handling; brief hand-back to `agent:systems-engineer` with
+`status:ready-for-rtvm-update`.
