@@ -82,3 +82,11 @@ normal workflow rather than a recurring anomaly worth re-flagging
 every time — still worth noting in the memory record, but no longer
 needs its own callout line in the hand-off comment unless the branch
 itself also touches RTVM.md.
+
+**Recurred an 8th time on issue #25 (DELIV-900, 2026-09-05):** SE
+committed the Verified status straight to `main` (`d067fb4`) before
+CI/CD merged `issue-25`. Merge (`7fcd590`) still clean, first-push
+succeeded (no concurrent-merge race this time); `issue-25` never
+touched `docs/RTVM.md` itself — only conflict was the usual
+keep-both memory-index line in `test-engineer/MEMORY.md`. Tagged
+v1.0.231, no release (DELIV-901 still Approved).
