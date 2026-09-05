@@ -27,3 +27,8 @@ config-format gotcha (`key = value` lines, not JSON).
 
 No new gotchas. Same low-risk profile as OUT-400 — pure presentation
 layer over an already-tested engine (CORE-205/DATA-OUT-302).
+
+**Post-merge trunk regression (same issue #23, main @ 46342d6):** PASS,
+88/88, 776 assertions, matches CI/CD's merge report exactly. Only
+clang-format nit is the pre-existing [[version_h_clang_format_nit]];
+all other files clean.
