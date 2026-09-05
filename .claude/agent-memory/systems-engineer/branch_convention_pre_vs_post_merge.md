@@ -66,3 +66,10 @@ Engineer), not `main`. Set status text to "In Test (... pending CI/CD
 merge)" rather than "Verified", since Verified is reserved for after
 CI/CD's commit-confirmation step per the Status vocabulary. Then still
 handed off `status:ready-for-commit` → `agent:cicd` per the fast path.
+
+Issue #11's second round (post-merge trunk regression, same day) landed
+on `main` directly per the general rule above — CORE-200 was already
+Verified with SHA 5e7f0fc recorded from the commit-confirmation step;
+this round only updated the status note's parenthetical from "trunk
+regression pending" to "trunk regression passed, 23/23". Same
+fast-path hand-off to `agent:cicd` afterward regardless.
