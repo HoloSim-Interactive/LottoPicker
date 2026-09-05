@@ -86,3 +86,12 @@ first merge attempt doesn't avoid the race, since the window that
 matters is between merge-commit and push, not before it — just accept
 that a redo-after-push-rejection is normal and don't try to pre-empt
 it.
+
+**Issue #16 (CORE-204) merging 2026-09-05: push succeeded on the first
+try, no race** — worth noting as the counterexample: the race isn't
+guaranteed, it just needs to be expected. Conflict set was the usual
+`src/CMakeLists.txt` comment-text-only conflict (file list auto-merged)
+plus, for the first time, *both* `software-engineer/MEMORY.md` and
+`test-engineer/MEMORY.md` conflicting in the same merge (previously
+only software-engineer's had come up alongside CMakeLists) — same
+keep-both resolution, no new pattern needed.
