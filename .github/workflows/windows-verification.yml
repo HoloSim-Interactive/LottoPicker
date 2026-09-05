@@ -18,12 +18,24 @@
 #
 # A CMake project that generates its .sln rather than committing one (the
 # normal CMake convention) is a real C++/MSBuild deliverable too — the .sln
-# just doesn't exist until configure time. `detect` also looks for a
-# CMakePresets.json configure preset whose `generator` is a Visual Studio
+# just doesn't exist until configure time. `detect` also looks for
+# CMakePresets.json configure presets whose `generator` is a Visual Studio
 # generator, by reading the field, not by guessing a preset name — nothing
-# below assumes this project's presets are named a particular way. When one
-# is found, `cpp-verify` configures with it before the existing
+# below assumes this project's presets are named a particular way. When any
+# are found, `cpp-verify` tries them in order (newest-looking name first)
+# until one configures successfully, before the existing
 # discover-a-.sln-and-build-it steps run, which then need no changes at all.
+#
+# WHY A LIST, NOT ONE PRESET: a CMake "Visual Studio" generator name is
+# pinned to a single VS release (e.g. "Visual Studio 17 2022") — there is no
+# generator name meaning "whichever VS is installed". `windows-latest`'s
+# installed VS version moves over the life of a project (confirmed: it
+# migrated from VS2022 to VS2026 mid-project here), and a project may
+# deliberately keep more than one preset for more than one VS release a
+# client might have. Trying every detected VS-generator preset until one
+# configures — rather than a single hardcoded name — means neither a runner
+# image upgrade nor a client's specific installed version needs this file
+# edited again.
 #
 # THIS WORKFLOW PRODUCES EVIDENCE. It never issues a verdict, never sets a
 # status:* or agent:* label, and never marks anything Verified. A green run is
@@ -69,7 +81,7 @@ jobs:
     outputs:
       dotnet: ${{ steps.scan.outputs.dotnet }}
       cpp: ${{ steps.scan.outputs.cpp }}
-      cmake_vs_preset: ${{ steps.scan.outputs.cmake_vs_preset }}
+      cmake_vs_presets: ${{ steps.scan.outputs.cmake_vs_presets }}
     steps:
       - uses: actions/checkout@v4
       - id: scan
@@ -79,34 +91,41 @@ jobs:
 
           # A CMake project may generate its .sln at configure time instead
           # of committing one — that's the normal CMake convention, not an
-          # absence of a C++ project. Look for a configure preset whose
+          # absence of a C++ project. Look for every configure preset whose
           # `generator` is a Visual Studio generator; read the field rather
           # than assuming a preset name (e.g. "windows-vs2022"), since that
           # name is a per-project choice, not a convention this file can rely
-          # on holding elsewhere.
-          CMAKE_VS_PRESET=""
+          # on holding elsewhere. There can be more than one (e.g. a project
+          # keeping presets for two VS releases across a runner-image
+          # migration) — collect all of them, newest-name-last sorted
+          # descending so cpp-verify tries the most likely match first.
+          CMAKE_VS_PRESETS=""
           PRESETS_FILE=$(find . \( -name 'CMakePresets.json' -o -name 'CMakeUserPresets.json' \) -not -path './**/build/*' | head -1)
           if [[ -n "$PRESETS_FILE" ]]; then
-            CMAKE_VS_PRESET=$(jq -r '[.configurePresets[]? | select(.generator? | test("^Visual Studio"; "i"))][0].name // empty' "$PRESETS_FILE")
+            CMAKE_VS_PRESETS=$(jq -r '[.configurePresets[]? | select(.generator? | test("^Visual Studio"; "i")) | .name] | sort | reverse | .[]' "$PRESETS_FILE")
           fi
 
           [[ -n "$CS" ]] && echo "dotnet=true" >> "$GITHUB_OUTPUT" || echo "dotnet=false" >> "$GITHUB_OUTPUT"
-          if [[ -n "$CPP" || -n "$CMAKE_VS_PRESET" ]]; then
+          if [[ -n "$CPP" || -n "$CMAKE_VS_PRESETS" ]]; then
             echo "cpp=true" >> "$GITHUB_OUTPUT"
           else
             echo "cpp=false" >> "$GITHUB_OUTPUT"
           fi
-          echo "cmake_vs_preset=$CMAKE_VS_PRESET" >> "$GITHUB_OUTPUT"
-          echo "Detected: dotnet=${CS:-none} cpp=${CPP:-none} cmake_vs_preset=${CMAKE_VS_PRESET:-none}"
+          {
+            echo "cmake_vs_presets<<PRESETS_EOF"
+            echo "$CMAKE_VS_PRESETS"
+            echo "PRESETS_EOF"
+          } >> "$GITHUB_OUTPUT"
+          echo "Detected: dotnet=${CS:-none} cpp=${CPP:-none} cmake_vs_presets=${CMAKE_VS_PRESETS:-none}"
           {
             echo "## Toolchains detected"
             echo ""
             echo "| Toolchain | Present | Leg |"
             echo "| --- | --- | --- |"
             echo "| C#/.NET | $([[ -n "$CS" ]] && echo yes || echo no) | $([[ -n "$CS" ]] && echo runs || echo skipped) |"
-            echo "| C++/MSBuild | $([[ -n "$CPP" || -n "$CMAKE_VS_PRESET" ]] && echo yes || echo no) | $([[ -n "$CPP" || -n "$CMAKE_VS_PRESET" ]] && echo runs || echo skipped) |"
-            if [[ -n "$CMAKE_VS_PRESET" ]]; then
-              echo "| ↳ via CMake preset | \`$CMAKE_VS_PRESET\` | configured before build |"
+            echo "| C++/MSBuild | $([[ -n "$CPP" || -n "$CMAKE_VS_PRESETS" ]] && echo yes || echo no) | $([[ -n "$CPP" || -n "$CMAKE_VS_PRESETS" ]] && echo runs || echo skipped) |"
+            if [[ -n "$CMAKE_VS_PRESETS" ]]; then
+              echo "| ↳ via CMake preset(s), tried in order | \`$(echo "$CMAKE_VS_PRESETS" | paste -sd, -)\` | first to configure wins |"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -322,15 +341,38 @@ jobs:
       - uses: microsoft/setup-msbuild@v2
 
       - name: Configure (CMake, Visual Studio generator)
-        if: needs.detect.outputs.cmake_vs_preset != ''
+        if: needs.detect.outputs.cmake_vs_presets != ''
         shell: pwsh
         run: |
-          # Generates the .sln this leg then discovers and builds exactly
-          # the way a client's own engineer would: `cmake --preset <name>`,
-          # same as opening the folder in Visual Studio and letting it
-          # auto-configure. No further steps below need to know this
-          # project uses CMake at all.
-          cmake --preset ${{ needs.detect.outputs.cmake_vs_preset }}
+          # Tries each detected VS-generator preset in turn, newest first,
+          # and stops at the first one that configures. A generator name is
+          # pinned to one VS release, so a preset for a version not present
+          # on this runner fails immediately with "could not find any
+          # instance of Visual Studio" -- that is an expected, not fatal,
+          # outcome as long as some other preset succeeds. Whichever one
+          # works generates the .sln, exactly as a client's own engineer
+          # would get from `cmake --preset <name>` or opening the folder in
+          # Visual Studio and letting it auto-configure. No further steps
+          # below need to know this project uses CMake at all.
+          $presetsRaw = "${{ needs.detect.outputs.cmake_vs_presets }}"
+          $presets = $presetsRaw -split "`r?`n" | Where-Object { $_ -ne '' }
+          New-Item -ItemType Directory -Force -Path evidence | Out-Null
+          $configured = $null
+          foreach ($p in $presets) {
+            Write-Host "Trying CMake preset: $p"
+            cmake --preset $p 2>&1 | Tee-Object -Append "evidence/cmake-configure-$p.log"
+            if ($LASTEXITCODE -eq 0) {
+              $configured = $p
+              break
+            }
+            Write-Host "Preset '$p' did not configure on this runner (VS version likely not installed) - trying next"
+          }
+          "presets tried (in order): $($presets -join ', ')" | Tee-Object evidence/cmake-preset-attempts.txt
+          if ($null -eq $configured) {
+            "none configured successfully" | Tee-Object -Append evidence/cmake-preset-attempts.txt
+            throw "No CMake Visual Studio preset configured successfully on this runner. Tried: $($presets -join ', ')"
+          }
+          "configured with: $configured" | Tee-Object -Append evidence/cmake-preset-attempts.txt
 
       - name: Build Debug|x64 and Release|x64
         shell: pwsh
@@ -402,6 +444,7 @@ jobs:
         shell: pwsh
         run: |
           $rows = @(
+            @{ n = "CMake VS-preset configure"; ok = (Test-Path evidence/cmake-preset-attempts.txt) },
             @{ n = "Build Debug|x64";        ok = (Test-Path evidence/build-debug.log) },
             @{ n = "Build Release|x64";      ok = (Test-Path evidence/build-release.log) },
             @{ n = "Native test discovery";  ok = ((Get-ChildItem evidence -Filter 'discovered-*.txt' -ErrorAction SilentlyContinue).Count -gt 0) },
