@@ -22,3 +22,9 @@ remember to [[shallow-clone-merge-base]] first), don't re-merge or
 re-tag. Confirm the prior merge/tag SHA in your comment, note no new
 action was needed, and hand back to `agent:systems-engineer` with no
 new status label (this is the normal next step, not an escalation).
+
+Confirmed again on issue #14 (CORE-206): SE's RTVM note (a706df9)
+recording an already-clean TE regression pass came back on
+`status:ready-for-commit`/`agent:cicd` even though `issue-14` (e5287b3)
+was already a confirmed ancestor of `main` from the original merge.
+Same handling applies — no re-merge, no re-tag, no new status label.
