@@ -24,3 +24,14 @@ CORE-205's gate, not UI-003's. Re-apply this same split when CORE-205
 lands: at that point the placeholder text should be real backtest output,
 and TP-UI-003/TP-DATA-OUT-302 should be re-checked at full content level,
 not just row-count.
+
+**Trunk regression (same issue #13, after CI/CD merge e020769/v1.0.114):**
+re-ran the identical CLI probes against the merged binary (main @
+9f743b5) — output byte-identical to the pre-merge check. 35/35 ctest
+still green. This confirms the merge-then-regress hand-off pattern:
+CI/CD merges → Systems Engineer records SHA in RTVM and routes
+`status:ready-for-test`/`agent:test-engineer` for regression → Test
+Engineer re-verifies the same feature on trunk (not just "did other
+things break") before releasing `status:ready-for-commit` back to
+CI/CD. No new RTVM edit needed on a pure-regression pass if RTVM
+already has the merge SHA recorded.
