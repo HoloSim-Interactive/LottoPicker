@@ -18,6 +18,7 @@ in `.github/AGENT_LABELS.md`.
 - [LottoPicker scaffold](lottopicker_scaffold.md) — CMake layout, INTERFACE lib until first feature source, and the Windows-workflow hand-off note from Generate Code Base (issue #5).
 - [DATA-IN-100 CSV ingestion](data_in_100_csv_ingestion.md) — CsvIngestor/DrawRecord design, the row-numbering convention I picked (not fixed in docs), fatal-vs-per-row error split (issue #7).
 - [LottoPicker error handling](lottopicker_error_handling.md) — typed-exception pattern (UI-001, issue #6) to extend for future validation errors, plus a clang-format pointer-alignment gotcha.
+- [CORE-201 co-occurrence scoring](core_201_cooccurrence_scoring.md) — CooccurrenceScorer design (issue #12) and the call to re-derive CORE-200's decay formula rather than block on its not-yet-merged parallel issue.
 
 ## Platform-specific notes
 
