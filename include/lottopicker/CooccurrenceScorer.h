@@ -4,20 +4,21 @@
 #include <map>
 #include <vector>
 
+#include "lottopicker/DecayScorer.h" // kDefaultHalfLifeDraws (shared with CORE-200)
 #include "lottopicker/DrawRecord.h"
 
 namespace lottopicker {
 
-// Same exponential recency-decay half-life default as CORE-200
-// (docs/SDD.md's Algorithm design: "HALF_LIFE_DRAWS defaults to 104
-// (~1 year at Florida Lotto's twice-weekly cadence)"). CORE-201 reuses
-// this value verbatim ("same decay weighting as CORE-200"), so it is
-// re-declared here rather than depending on CORE-200's own header,
-// which is not a declared dependency of this item (see RTVM CORE-201
-// Dependencies: DATA-IN-100 only). If CORE-200 lands a shared decay
-// utility, this constant/function pair should be consolidated onto it
-// rather than kept duplicated.
-inline constexpr int kDefaultHalfLifeDraws = 104;
+// `kDefaultHalfLifeDraws` (the exponential recency-decay half-life,
+// "same decay weighting as CORE-200" per docs/SDD.md's Algorithm
+// design) now comes from DecayScorer.h rather than being re-declared
+// here. It was originally duplicated because, when CORE-201 (#12) was
+// implemented, CORE-200 (#11) was mid-flight in parallel with no
+// merged code yet, and CORE-201's declared RTVM Dependency is
+// DATA-IN-100 only. Both have since merged; consolidating onto one
+// definition avoids the redefinition error that surfaces the moment
+// any single translation unit needs both headers (as CORE-206's
+// PoolSizeNormalizer does).
 
 // Group sizes CORE-201 scores: pairs through the full 6-number draw.
 // kMaxGroupSize intentionally equals kNumbersPerDraw (DrawRecord.h) —
