@@ -34,4 +34,22 @@ public:
     explicit CliConfigNotFoundError(const std::string &message) : LottoPickerError(message) {}
 };
 
+// The config file named by a syntactically-valid, existing path can't
+// actually be opened/read (e.g. a permissions/race condition after
+// CliArgs::parse's existence check). Distinct from ConfigValidationError,
+// which is about the *contents* of a file that opened fine.
+class ConfigFormatError : public LottoPickerError {
+public:
+    explicit ConfigFormatError(const std::string &message) : LottoPickerError(message) {}
+};
+
+// A config file opened and read fine, but its contents fail UI-002's
+// validation: a required key (`data_file`, `top_n`) is missing, or
+// `top_n` is not a positive integer. `message` names the offending key
+// per docs/RTVM.md's TP-UI-002.
+class ConfigValidationError : public LottoPickerError {
+public:
+    explicit ConfigValidationError(const std::string &message) : LottoPickerError(message) {}
+};
+
 } // namespace lottopicker
