@@ -73,52 +73,20 @@ DOne
 
 ## 7. Submit the kickoff issue
 
-On the new repo: **Issues → New issue → Project Kickoff**. This
-auto-applies `agent:product-manager` the moment it's submitted.
 
-In the "What are we building?" field, use the **Description of
-deliverable(s)** value from the table above, expanded to full
-sentences if it was kept brief there. If you're tracking a budget and
-want it recorded as project context, mention it explicitly here too.
 
 ---
 
 ## 8. Where the interview happens, and how to answer it
 
-The Product Manager's questions appear as a comment on the kickoff
-issue — check the **Issues** tab, open the issue, scroll to comments.
-
-To reply: **just write a plain comment** — no special mention syntax
-needed. Comments don't trigger anything on their own; only labels do.
-After posting your reply:
-
-1. Open the issue's **Labels** section
-2. Remove `agent:product-manager`
-3. Immediately re-add `agent:product-manager`
-
-That relabel is what wakes the agent back up to read what you wrote.
-Repeat for as many rounds as the interview takes.
-
-If a run seems to be taking a while, check the **Actions** tab for
-current status before assuming something's wrong.
+Done
 
 ---
 
 ## 9. What "done" with kickoff looks like
 
-Once scope is fully defined and confirmed, the Product Manager closes
-the kickoff issue and opens a new one titled **"RTVM"**, labeled
-`agent:systems-engineer` — expected behavior, not an error. That's
-where requirements decomposition begins, and it proceeds on its own
-from there.
+DOne
 
 ## Default Task for the Human Client: UE host project (added 2026-08-27)
 
-For any Unreal Engine plugin project, BEFORE the Generate Code Base
-issue runs: confirm a barebones UE host project exists for build and
-test staging, or copy `resources/ue-host-project/` into the staging
-location (its README has the two commands). Agents must never spend
-budget regenerating this boilerplate from scratch — the resource is
-text-only, engine-pinned, and proven against UE 5.6 headless runs.
-If the client prefers to generate it themselves in the editor, that
-is equally fine; what matters is it exists before code generation.
+N/A
