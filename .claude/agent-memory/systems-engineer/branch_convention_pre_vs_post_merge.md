@@ -90,3 +90,13 @@ onto the already-created downstream issue #17 (CORE-203) as an
 informational comment, since that's the issue that will actually wire
 `CompositeScorer` into the pipeline — not an RTVM change itself, just
 context-preservation so it isn't lost between issue threads.
+
+Confirmed a fifth time on issue #23 (OUT-401, 2026-09-05): CI/CD's
+commit-confirmation reported merge SHA `8ed9543` (v1.0.213, no release
+cut) with regression testing needed. Direct push to `main` was
+initially rejected (another commit, `ca91a61`, had landed on main in
+the interim — CI/CD's own memory-file commit, unrelated file); a plain
+`git pull --rebase origin main` resolved it cleanly with no conflict.
+Recorded the SHA in OUT-401's Commit(s) column, then still handed off
+`status:ready-for-test` → `agent:test-engineer` per the fast path
+since CI/CD flagged regression testing needed.
