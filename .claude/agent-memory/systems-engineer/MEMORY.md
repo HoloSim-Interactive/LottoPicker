@@ -30,6 +30,7 @@ in `.github/AGENT_LABELS.md`.
 - [RTVM fast-path: reconcile against main](rtvm_fast_path_reconcile_against_main.md) — if Test Engineer flags main is ahead of the feature branch's RTVM copy, edit main directly, not the stale branch copy.
 - [CI/CD "no new commit" after regression](cicd_no_new_commit_after_regression.md) — if CI/CD's post-regression comment says nothing new merged, just append the regression note to the existing RTVM status/commit entry and close, don't wait for a fresh SHA.
 - [Regression ready-for-rtvm-update still routes to CI/CD](regression_ready_for_rtvm_update_still_goes_to_cicd.md) — when Test Engineer's hand-off is a *regression* pass (not first-time), still follow the fast path to agent:cicd; don't skip straight to closing yourself.
+- [Version tag vs. release cut](version_tag_vs_release_cut.md) — a tagged merge (v1.0.x) isn't automatically a release; only notify PM when CI/CD explicitly says a release was cut.
 
 ## Documentation index
 
