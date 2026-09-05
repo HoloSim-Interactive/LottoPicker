@@ -7,6 +7,7 @@
 #include "lottopicker/Config.h"
 #include "lottopicker/Errors.h"
 #include "lottopicker/ModelStore.h"
+#include "lottopicker/RankedListPresenter.h"
 #include "lottopicker/RankingEngine.h"
 #include "lottopicker/Version.h"
 
@@ -61,20 +62,12 @@ int main(int argc, char **argv) {
         } else {
             // Normal ranking path (CORE-203): score the full combination
             // space against the model just loaded/built above, retaining
-            // only config.topN via RankingEngine's fixed-size heap.
-            // Console formatting here is intentionally minimal (a plain
-            // rank/combo/score line) -- OUT-400's fully human-readable
-            // presentation is a separate, not-yet-implemented RTVM item.
+            // only config.topN via RankingEngine's fixed-size heap, then
+            // render it as OUT-400's human-readable console table.
             std::cout << "mode: rank\n";
             const std::vector<lottopicker::RankedCombo> ranked =
                 lottopicker::RankingEngine::rank(modelResult.artifact, config.topN);
-            for (const lottopicker::RankedCombo &entry : ranked) {
-                std::cout << "  " << entry.rank << ":";
-                for (int number : entry.combo) {
-                    std::cout << " " << number;
-                }
-                std::cout << " (score=" << entry.score << ")\n";
-            }
+            lottopicker::RankedListPresenter::print(std::cout, ranked);
         }
         return EXIT_SUCCESS;
     } catch (const lottopicker::LottoPickerError &e) {

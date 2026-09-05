@@ -13,6 +13,7 @@ add_executable(lottopicker_tests
     ModelSerializerTest.cpp
     ModelStoreTest.cpp
     PoolSizeNormalizerTest.cpp
+    RankedListPresenterTest.cpp
     RankingEngineTest.cpp
     Sha256Test.cpp
 )
