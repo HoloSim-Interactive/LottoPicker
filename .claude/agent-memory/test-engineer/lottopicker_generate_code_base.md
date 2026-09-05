@@ -58,3 +58,11 @@ applicability statements, named recommendation), not a command to run.
 Read the doc, check each numbered criterion in `docs/RTVM.md`'s TP-CORE-xxx
 literally, and hand off the same way (`status:ready-for-rtvm-update` →
 `agent:systems-engineer`) as any code pass.
+
+**UI-001 pass (issue #6, 2026-09-05):** TP-UI-001's step 3 says "proceeds
+to ranking without error" but ranking (UI-002/CORE) isn't built yet — this
+is expected per the Implementation Plan's ordering, not a defect. Judge
+step 3 as satisfied if the tool exits 0 with no error on a well-formed
+config path, even though it doesn't yet actually rank anything. Re-check
+this note once UI-002/CORE land — at that point "proceeds to ranking"
+should mean real ranking output, and the looser bar no longer applies.
