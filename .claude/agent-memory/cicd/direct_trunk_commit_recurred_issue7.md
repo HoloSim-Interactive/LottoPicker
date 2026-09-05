@@ -90,3 +90,12 @@ succeeded (no concurrent-merge race this time); `issue-25` never
 touched `docs/RTVM.md` itself — only conflict was the usual
 keep-both memory-index line in `test-engineer/MEMORY.md`. Tagged
 v1.0.231, no release (DELIV-901 still Approved).
+
+**Recurred a 9th time on issue #27 (DATA-IN-101 part 2, 2026-09-05):**
+SE committed the RTVM closure note straight to `main` (`b861ea0`)
+while `issue-27` was still open and 3 unrelated commits behind main
+(a Systems-Engineer VS-generator/DELIV-901 detour had landed on trunk
+in between). Merge (`e578223`) still clean, no conflict — `issue-27`
+never touched `docs/RTVM.md` itself, only `EraTable.h`,
+`EraTaggerTest.cpp`, and per-role memory files. Tagged v1.0.249, no
+release (DELIV-901 still "Approved", not Verified).
