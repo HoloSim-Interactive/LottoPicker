@@ -30,6 +30,7 @@ in `.github/AGENT_LABELS.md`.
 - [OUT-401 BacktestReportPresenter](out_401_backtest_report_presenter.md) — issue #23: PASS, 88/88, 776 assertions; per-date BacktestError correctly excluded from report rows, not faked; trunk regression re-confirmed clean at main@46342d6.
 - [NFR-500 offline-operation inspection](lottopicker_generate_code_base.md) — issue #24: PASS, no branch (inspection-only, no code change); reusable 3-part grep/include/CMake recipe for network-call inspection items.
 - [DELIV-900 run documentation](deliv_900_run_documentation.md) — issue #25: PASS, clean-clone build+run reproduced README's sample output byte-for-byte; clang-format doesn't apply to `.cfg` fixtures.
+- [DATA-IN-101 era boundary](data_in_101_era_boundary.md) — issue #27: PASS, deferred TP-DATA-IN-101 part 2 finally closed; independently re-derived the 1999-10-24 boundary from raw CSV rather than trusting SE/README's claim, matched.
 
 ## Process notes
 
