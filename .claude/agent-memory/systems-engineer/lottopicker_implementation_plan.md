@@ -42,3 +42,9 @@ All 21 feature issues got `status:on-hold` + `type:requirement` (no
 has no UI/scene-developer split; CLI-only per confirmed Scope).
 `dependency-check.yml` releases each to `agent:software-engineer` once
 its Finish-Start dependencies close.
+
+**#5 Generate Code Base carries no RTVM ID** (it's plan step 1, not a
+feature) — when Test Engineer's PASS arrives via the normal
+`status:ready-for-rtvm-update` path, there's no RTVM row to touch;
+just confirm that against this file and `docs/RTVM.md`, comment, and
+hand straight to `agent:cicd` with `status:ready-for-commit`.
