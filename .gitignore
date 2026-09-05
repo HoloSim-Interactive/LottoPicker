@@ -37,3 +37,9 @@
 .vscode/
 CMakeUserPresets.json
 compile_commands.json
+
+# Persisted model artifacts (DATA-OUT-301/CORE-204): derived data,
+# regenerated from data_file on demand -- never checked in, including
+# the one a `README.md`-documented run against examples/ produces
+# alongside examples/sample_history.csv.
+*.model
