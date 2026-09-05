@@ -117,10 +117,11 @@ documented plain-text format (no binary/serialization dependency —
 keeps with the Deliverable Requirements' "cheap" build-tooling
 directive, and stays diffable/inspectable for debugging):
 ```
-LOTTOPICKER_MODEL v1
+LOTTOPICKER_MODEL v2
 source_hash=<sha256 of data_file's bytes>
 date_range=<earliest_date>,<latest_date>
 draw_count=<n>
+baseline_cooc=<b2>,<b3>,<b4>,<b5>,<b6>
 [per_number]
 <number>,<decay_score>
 ... (one row per pool number)
@@ -142,6 +143,28 @@ Scores are written with enough decimal digits for exact round-trip
 digits) to satisfy TP-DATA-OUT-301's bit-for-bit clause. `source_hash`
 is what CORE-204's staleness check compares against the current
 `data_file` on each run.
+
+**v2 addition (CORE-203, issue #17): `baseline_cooc`.** Five scalars,
+one per group size 2-6, each the chance-expected co-occurrence
+baseline (`expected_count`, see Algorithm Design's hypergeometric
+formula) summed across the model's covered eras. Required because
+CORE-203 evaluates `norm_cooc(group)` for every subset of every
+candidate 6-number combination during ranking — the vast majority of
+which were never historically observed and are absent from the sparse
+`[group_scores:g]` tables above. Per CORE-206's documented behavior
+(TP-CORE-206 part 2), an unobserved group's `norm_cooc` is not `0.0`;
+it is `0.0 - baseline_cooc[g]` (the group's absence is itself
+statistically informative once compared to chance). Persisting this
+scalar means a *reused* model (loaded via CORE-204's hash-match path)
+scores unobserved groups identically to a freshly-*rebuilt* one — the
+alternative (deriving it only at build time) would have silently
+returned `0.0` for every unobserved group on every reused run, which
+is a correctness bug, not a stylistic gap. **No migration path for a
+pre-existing v1 file**: `ModelSerializer::read()` rejects a v1 file
+(missing `baseline_cooc`) as invalid, which falls through to
+`ModelStore`'s existing rebuild-on-invalid-artifact path — consistent
+with TP-CORE-204's "any change to source data regenerates the model"
+behavior, just triggered by a format-version mismatch instead.
 
 **Console output** (`OUT-400`, `OUT-401`): human-readable tables with
 a header row and clearly delimited (fixed-width or `|`-delimited)
