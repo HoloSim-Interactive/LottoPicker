@@ -8,9 +8,11 @@
 # UI-001; CsvIngestor.cpp, RTVM DATA-IN-100; DecayScorer.cpp, RTVM
 # CORE-200; CooccurrenceScorer.cpp, RTVM CORE-201; Config.cpp, RTVM
 # UI-002; EraTable.cpp/EraTagger.cpp, RTVM DATA-IN-101; PoolSizeNormalizer.cpp,
-# RTVM CORE-206). Add each new feature's .cpp here as it lands.
+# RTVM CORE-206; CompositeScorer.cpp, RTVM CORE-202). Add each new
+# feature's .cpp here as it lands.
 add_library(lottopicker_lib STATIC
     CliArgs.cpp
+    CompositeScorer.cpp
     CooccurrenceScorer.cpp
     Config.cpp
     CsvIngestor.cpp
