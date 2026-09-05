@@ -16,6 +16,15 @@
 # and test assemblies are all discovered rather than hardcoded — there is no
 # SOLUTION or EXE_NAME to update when this lands in a new project.
 #
+# A CMake project that generates its .sln rather than committing one (the
+# normal CMake convention) is a real C++/MSBuild deliverable too — the .sln
+# just doesn't exist until configure time. `detect` also looks for a
+# CMakePresets.json configure preset whose `generator` is a Visual Studio
+# generator, by reading the field, not by guessing a preset name — nothing
+# below assumes this project's presets are named a particular way. When one
+# is found, `cpp-verify` configures with it before the existing
+# discover-a-.sln-and-build-it steps run, which then need no changes at all.
+#
 # THIS WORKFLOW PRODUCES EVIDENCE. It never issues a verdict, never sets a
 # status:* or agent:* label, and never marks anything Verified. A green run is
 # an input to a test procedure, not a pass. The Test Engineer reads the
@@ -36,6 +45,9 @@ on:
       - "**/*.cpp"
       - "**/*.h"
       - "**/*.hpp"
+      - "**/CMakeLists.txt"
+      - "**/CMakePresets.json"
+      - "**/CMakeUserPresets.json"
       - "global.json"
       - "tests/windows/**"
   workflow_dispatch: {}
@@ -57,22 +69,45 @@ jobs:
     outputs:
       dotnet: ${{ steps.scan.outputs.dotnet }}
       cpp: ${{ steps.scan.outputs.cpp }}
+      cmake_vs_preset: ${{ steps.scan.outputs.cmake_vs_preset }}
     steps:
       - uses: actions/checkout@v4
       - id: scan
         run: |
           CS=$(find . -name '*.csproj' -not -path './publish/*' -not -path './**/obj/*' | head -1)
           CPP=$(find . -name '*.vcxproj' -not -path './**/obj/*' | head -1)
-          [[ -n "$CS"  ]] && echo "dotnet=true"  >> "$GITHUB_OUTPUT" || echo "dotnet=false" >> "$GITHUB_OUTPUT"
-          [[ -n "$CPP" ]] && echo "cpp=true"     >> "$GITHUB_OUTPUT" || echo "cpp=false"    >> "$GITHUB_OUTPUT"
-          echo "Detected: dotnet=${CS:-none} cpp=${CPP:-none}"
+
+          # A CMake project may generate its .sln at configure time instead
+          # of committing one — that's the normal CMake convention, not an
+          # absence of a C++ project. Look for a configure preset whose
+          # `generator` is a Visual Studio generator; read the field rather
+          # than assuming a preset name (e.g. "windows-vs2022"), since that
+          # name is a per-project choice, not a convention this file can rely
+          # on holding elsewhere.
+          CMAKE_VS_PRESET=""
+          PRESETS_FILE=$(find . \( -name 'CMakePresets.json' -o -name 'CMakeUserPresets.json' \) -not -path './**/build/*' | head -1)
+          if [[ -n "$PRESETS_FILE" ]]; then
+            CMAKE_VS_PRESET=$(jq -r '[.configurePresets[]? | select(.generator? | test("^Visual Studio"; "i"))][0].name // empty' "$PRESETS_FILE")
+          fi
+
+          [[ -n "$CS" ]] && echo "dotnet=true" >> "$GITHUB_OUTPUT" || echo "dotnet=false" >> "$GITHUB_OUTPUT"
+          if [[ -n "$CPP" || -n "$CMAKE_VS_PRESET" ]]; then
+            echo "cpp=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "cpp=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "cmake_vs_preset=$CMAKE_VS_PRESET" >> "$GITHUB_OUTPUT"
+          echo "Detected: dotnet=${CS:-none} cpp=${CPP:-none} cmake_vs_preset=${CMAKE_VS_PRESET:-none}"
           {
             echo "## Toolchains detected"
             echo ""
             echo "| Toolchain | Present | Leg |"
             echo "| --- | --- | --- |"
             echo "| C#/.NET | $([[ -n "$CS" ]] && echo yes || echo no) | $([[ -n "$CS" ]] && echo runs || echo skipped) |"
-            echo "| C++/MSBuild | $([[ -n "$CPP" ]] && echo yes || echo no) | $([[ -n "$CPP" ]] && echo runs || echo skipped) |"
+            echo "| C++/MSBuild | $([[ -n "$CPP" || -n "$CMAKE_VS_PRESET" ]] && echo yes || echo no) | $([[ -n "$CPP" || -n "$CMAKE_VS_PRESET" ]] && echo runs || echo skipped) |"
+            if [[ -n "$CMAKE_VS_PRESET" ]]; then
+              echo "| ↳ via CMake preset | \`$CMAKE_VS_PRESET\` | configured before build |"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
   dotnet-verify:
@@ -286,6 +321,17 @@ jobs:
 
       - uses: microsoft/setup-msbuild@v2
 
+      - name: Configure (CMake, Visual Studio generator)
+        if: needs.detect.outputs.cmake_vs_preset != ''
+        shell: pwsh
+        run: |
+          # Generates the .sln this leg then discovers and builds exactly
+          # the way a client's own engineer would: `cmake --preset <name>`,
+          # same as opening the folder in Visual Studio and letting it
+          # auto-configure. No further steps below need to know this
+          # project uses CMake at all.
+          cmake --preset ${{ needs.detect.outputs.cmake_vs_preset }}
+
       - name: Build Debug|x64 and Release|x64
         shell: pwsh
         run: |
@@ -294,7 +340,7 @@ jobs:
           # that only works with CI-only switches has verified a project the
           # client doesn't have.
           $sln = Get-ChildItem -Recurse -Filter *.sln | Select-Object -First 1
-          if (-not $sln) { throw "no .sln found, but a .vcxproj was detected" }
+          if (-not $sln) { throw "no .sln found, but a .vcxproj or a CMake Visual Studio preset was detected" }
           "building: $($sln.FullName)" | Tee-Object evidence/build-target.txt
           msbuild $sln.FullName /p:Configuration=Debug   /p:Platform=x64 `
             /v:normal /fl "/flp:LogFile=evidence/build-debug.log;Verbosity=normal"
