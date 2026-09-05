@@ -36,3 +36,14 @@ RTVM's TP-DATA-IN-101 status-note update (recording the confirmed date,
 replacing the "deferred" language) and DELIV-900's deferred-check
 tracking are Systems Engineer's to make on the rtvm-update hand-off,
 per issue #10's original division of labor — not touched by me.
+
+**Trunk regression (same issue #27 thread, post-merge):** SE recorded
+the merge SHA (`e578223`, tag v1.0.249) into RTVM with "trunk regression
+pending" noted; CI/CD then asked for it explicitly. Re-ran clean build +
+full suite on `main` @ `b4a8adb` — 88/88, clean tree, no new
+clang-format violations beyond the known `Version.h` nit. PASS, handed
+back to Systems Engineer to update the RTVM note from "pending" to
+"passed." Confirms the DATA-IN-101/DELIV-900 rows already on trunk
+matched the actual merge SHA before I signed off — worth spot-checking
+that alignment on any post-merge regression ask, not just re-running
+tests.
