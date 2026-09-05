@@ -23,6 +23,7 @@ in `.github/AGENT_LABELS.md`.
 - [CORE-202 CompositeScorer pass](core_202_composite_scorer.md) — hand-derived both TP-CORE-202 fixture values independently (not just trusted the code comments); matched exactly.
 - [CORE-204 ModelStore](core_204_model_store.md) — first CLI pipeline wiring; manual 4-run recipe for TP-CORE-204's reused/rebuilt behavior since no shipped fixtures exist yet.
 - [CORE-203 RankingEngine](core_203_ranking_engine.md) — full-pool real runs take ~1min wall-clock, not a hang; open SDD v1/v2 model-format doc flag to recheck at RTVM-update time.
+- [DATA-OUT-300 ranked-list structure](data_out_300_ranked_list_structure.md) — issue #19: "already-shipped" RTVM items can still need a small new dedicated-tag/exact-fixture test, not always a no-diff pass; clang-format path gotcha noted.
 
 ## Platform-specific test considerations
 

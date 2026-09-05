@@ -84,6 +84,45 @@ TEST_CASE("RankingEngine retains exactly topN results, strictly descending, no d
     }
 }
 
+// TP-DATA-OUT-300 — Objective: ranked-list structure integrity.
+// Fixture run with top_n=5 exactly as the test procedure specifies
+// (deliberately distinct from TP-CORE-203 part 1's topN=100 case
+// above, so this test stands on its own as direct evidence for the
+// DATA-OUT-300 item rather than relying on a reader to infer it from
+// the CORE-203 case). Reuses the powers-of-two fixture so "strictly
+// descending" excludes ties, not just non-increasing order. Each
+// combination's 6-distinct-numbers-in-pool-range property is asserted
+// explicitly here (via a std::set of size 6 and a range check) even
+// though RankingEngine's construction-by-nested-index-loops already
+// guarantees it structurally -- TP-DATA-OUT-300 calls it out as an
+// expectation to verify, so it gets an explicit assertion rather than
+// being taken on faith from CORE-203's design.
+TEST_CASE("Ranked-list structure has exactly topN entries, strictly descending scores, "
+          "and 6 distinct in-pool numbers per combination",
+          "[DATA-OUT-300][CORE-203]") {
+    constexpr int poolMin = 1;
+    constexpr int poolMax = 20;
+    const ModelArtifact artifact = perNumberPowersOfTwoArtifact(poolMin, poolMax);
+    const std::vector<RankedCombo> results =
+        RankingEngine::rank(artifact, /*topN=*/5, zeroGroupWeights(), poolMin, poolMax);
+
+    REQUIRE(results.size() == 5);
+
+    for (std::size_t i = 0; i < results.size(); ++i) {
+        CHECK(results[i].rank == static_cast<int>(i) + 1);
+        if (i > 0) {
+            CHECK(results[i - 1].score > results[i].score); // strictly descending
+        }
+
+        const std::set<int> distinctNumbers(results[i].combo.begin(), results[i].combo.end());
+        CHECK(distinctNumbers.size() == 6); // 6 distinct numbers, no repeats
+        for (int number : results[i].combo) {
+            CHECK(number >= poolMin);
+            CHECK(number <= poolMax);
+        }
+    }
+}
+
 // TP-CORE-203 part 2 (Analysis, code-review): this test doesn't (and
 // can't) directly assert "the full space was never materialized" at
 // runtime, but it does confirm the *output* CORE-203's streaming

@@ -27,6 +27,7 @@ in `.github/AGENT_LABELS.md`.
 - [CORE-202 CompositeScorer](core_202_composite_scorer.md) — linear-combination composite score (issue #15), a nested-struct-default-argument C++ gotcha, and the weight-exposure-vs-Config scope call.
 - [CORE-204 ModelStore](core_204_model_store.md) — hash-check/build-or-load orchestration + DATA-OUT-301 serializer scope call, model-path-naming convention, main.cpp finally wired to ingestion (issue #16).
 - [CORE-203 RankingEngine](core_203_ranking_engine.md) — min-heap top-N over the full combo space (issue #17), the baselineCooc/DATA-OUT-301-v2 correctness gap it surfaced and fixed, ~43s real-run timing note.
+- [DATA-OUT-300 ranked-list structure](data_out_300_ranked_list_structure.md) — issue #19: struct already existed from CORE-203; only a dedicated `[DATA-OUT-300]`-tagged test (topN=5, per TP text) was the real gap.
 
 ## Platform-specific notes
 
