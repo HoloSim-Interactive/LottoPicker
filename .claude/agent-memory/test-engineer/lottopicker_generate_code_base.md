@@ -66,3 +66,14 @@ step 3 as satisfied if the tool exits 0 with no error on a well-formed
 config path, even though it doesn't yet actually rank anything. Re-check
 this note once UI-002/CORE land — at that point "proceeds to ranking"
 should mean real ranking output, and the looser bar no longer applies.
+
+**UI-001 regression pass, same issue #6, second hand-off (2026-09-05):**
+after CI/CD merged issue-6's 85b764f into `main` as 8fd22b2 (real merge
+commit this time, not fast-forward — trunk had moved from issue-7's
+DATA-IN-100 merge in between) and Systems Engineer recorded the SHA +
+Verified status in RTVM, CI/CD routed back to Test Engineer for
+regression. Confirms the fast-path noted above generalizes: pull `main`,
+confirm RTVM SHA present, rerun full build/ctest (117/117, 10/10 —
+includes issue-7's CsvIngestor suite), spot-recheck the specific TP steps
+directly against the trunk binary. Same hand-off shape even on a second
+pass through the same issue number.
