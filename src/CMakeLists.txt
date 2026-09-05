@@ -8,8 +8,9 @@
 # UI-001; CsvIngestor.cpp, RTVM DATA-IN-100; DecayScorer.cpp, RTVM
 # CORE-200; CooccurrenceScorer.cpp, RTVM CORE-201; Config.cpp, RTVM
 # UI-002; EraTable.cpp/EraTagger.cpp, RTVM DATA-IN-101; PoolSizeNormalizer.cpp,
-# RTVM CORE-206; CompositeScorer.cpp, RTVM CORE-202). Add each new
-# feature's .cpp here as it lands.
+# RTVM CORE-206; CompositeScorer.cpp, RTVM CORE-202;
+# Sha256.cpp/ModelSerializer.cpp/ModelStore.cpp, RTVM CORE-204/DATA-OUT-301).
+# Add each new feature's .cpp here as it lands.
 add_library(lottopicker_lib STATIC
     CliArgs.cpp
     CompositeScorer.cpp
@@ -19,7 +20,10 @@ add_library(lottopicker_lib STATIC
     DecayScorer.cpp
     EraTable.cpp
     EraTagger.cpp
+    ModelSerializer.cpp
+    ModelStore.cpp
     PoolSizeNormalizer.cpp
+    Sha256.cpp
 )
 target_include_directories(lottopicker_lib PUBLIC "${CMAKE_SOURCE_DIR}/include")
 target_compile_features(lottopicker_lib PUBLIC cxx_std_17)
