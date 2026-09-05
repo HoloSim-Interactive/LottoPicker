@@ -23,6 +23,8 @@ in `.github/AGENT_LABELS.md`.
 
 ## Requirements patterns and traps
 
+- [Workflow file deploy needs human](workflow_file_deploy_needs_human.md) — no agent can push new/changed files under `.github/workflows/` (GitHub rejects at push time, confirmed by direct test); go straight to status:needs-human, no agent:* label.
+
 - [Lock-acquire pull resolves a stale-looking doc](lock_pull_resolves_stale_read.md) — before rewriting a shared doc that looks out of sync with another role's claim, pull (lock-acquire does this) and re-read before assuming the edit was lost.
 - [Genuine research via public APIs](genuine_research_via_public_apis.md) — Crossref/GitHub-search/Wikipedia REST calls for real, checkable sources when a stakeholder need demands actual comparative research, not restated client description.
 - [Branch convention: pre- vs post-merge](branch_convention_pre_vs_post_merge.md) — issue-<N> branch is for pre-merge collaboration; once CI/CD reports a merge SHA, editing main directly for the RTVM SHA/status update is correct, not a repeat of the direct-to-trunk flag.
