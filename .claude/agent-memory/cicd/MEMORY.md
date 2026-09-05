@@ -27,3 +27,4 @@ in `.github/AGENT_LABELS.md`.
 ## Known issues
 
 - [Inspection-item direct-trunk commit](inspection_item_direct_trunk_commit.md) — on CORE-207/issue #8, Systems Engineer committed the RTVM status change straight to main instead of via CI/CD; check both directions of the diff before assuming the branch has the work.
+- [Direct-trunk commit recurred on issue #7](direct_trunk_commit_recurred_issue7.md) — same pattern on a Test-type item (not just Inspection); SE's own "post-merge" justification memory was misapplied since no merge had happened yet — harmless here, flag it.
