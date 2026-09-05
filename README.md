@@ -7,7 +7,7 @@ the full scope and `docs/SDD.md` for the architecture.
 
 ## Build from a clean clone
 
-Requires CMake 3.21+ and a C++17 compiler (GCC, Clang, or MSVC 2022).
+Requires CMake 3.21+ and a C++17 compiler (GCC, Clang, or MSVC 2022/2026).
 
 ```sh
 cmake --preset default
@@ -15,13 +15,19 @@ cmake --build --preset default
 ctest --preset default
 ```
 
-On Windows, open the folder directly in Visual Studio 2022 (File → Open
-→ Folder — VS's built-in CMake integration auto-detects
-`CMakeLists.txt` and the `windows-vs2022` preset), or run:
+On Windows, open the folder directly in Visual Studio (File → Open →
+Folder — VS's built-in CMake integration auto-detects `CMakeLists.txt`
+and the matching preset for whichever VS version is installed), or run
+whichever of the following matches your installed Visual Studio
+version — a CMake "Visual Studio" generator is pinned to one release,
+so only the matching preset will configure successfully:
 
 ```sh
-cmake --preset windows-vs2022
+cmake --preset windows-vs2022      # Visual Studio 2022
 cmake --build --preset windows-vs2022
+
+cmake --preset windows-vs2026      # Visual Studio 2026
+cmake --build --preset windows-vs2026
 ```
 
 ## Config file format

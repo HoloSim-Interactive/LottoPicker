@@ -23,6 +23,14 @@
       "generator": "Visual Studio 17 2022",
       "architecture": "x64",
       "binaryDir": "${sourceDir}/build/${presetName}"
+    },
+    {
+      "name": "windows-vs2026",
+      "displayName": "Visual Studio 18 2026",
+      "description": "Opens as a native .sln in Visual Studio 2026, or builds headlessly via `cmake --build --preset windows-vs2026`. Kept alongside windows-vs2022 (not a replacement) since a Visual Studio generator name is pinned to one toolset version each -- CMake has no version-agnostic 'newest installed VS' generator name -- so whichever preset matches the VS actually installed on a given machine is the one that configures successfully; the other fails cleanly with 'could not find any instance of Visual Studio' and is skipped. See docs/SDD.md's Target-platform verification strategy for why both are kept rather than picking one.",
+      "generator": "Visual Studio 18 2026",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build/${presetName}"
     }
   ],
   "buildPresets": [
@@ -33,6 +41,11 @@
     {
       "name": "windows-vs2022",
       "configurePreset": "windows-vs2022",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "windows-vs2026",
+      "configurePreset": "windows-vs2026",
       "configuration": "RelWithDebInfo"
     }
   ],
@@ -47,6 +60,14 @@
     {
       "name": "windows-vs2022",
       "configurePreset": "windows-vs2022",
+      "configuration": "RelWithDebInfo",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "windows-vs2026",
+      "configurePreset": "windows-vs2026",
       "configuration": "RelWithDebInfo",
       "output": {
         "outputOnFailure": true

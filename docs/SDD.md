@@ -362,6 +362,28 @@ determines whether the client's own engineers can pick this up.
   CMake integration auto-detects `CMakeLists.txt`), or runs
   `cmake --preset windows-vs2022` for a classic `.sln` if preferred.
   Generate Code Base establishes both presets.
+- **Multiple pinned VS-generator presets, not one — decided 2026-09-05
+  at the DELIV-901 consolidation check, issue #26.** A CMake "Visual
+  Studio" generator name is pinned to a single VS release
+  (`"Visual Studio 17 2022"`, `"Visual Studio 18 2026"`, ...) — there
+  is no generator name meaning "whichever VS is installed", so a
+  single preset cannot survive a VS version the client (or a CI
+  runner image) upgrades to. Confirmed in practice: `windows-latest`
+  migrated from VS2022 to VS2026 mid-project (GitHub Actions runner
+  image change, 2026-06), which broke the previously-sole
+  `windows-vs2022` preset's `cmake --preset windows-vs2022` on that
+  runner (`could not find any instance of Visual Studio`). Fix: keep
+  one preset per VS release the project supports
+  (`windows-vs2022`, `windows-vs2026`) rather than replacing the old
+  one, and have anything that configures automatically (CI, a fresh
+  clone script) try them in descending name order, stopping at the
+  first that configures — see `docs/ci/windows-verification.yml`'s
+  `cpp-verify` job. A client opening the folder directly in Visual
+  Studio is unaffected either way: VS's own CMake integration matches
+  its installed version to the corresponding preset without this
+  fallback logic. Adding a preset for a future VS release when one
+  ships is a one-line addition to `CMakePresets.json`, not a design
+  change.
 - **Directory layout** (established at Generate Code Base):
   `src/`, `include/lottopicker/`, `tests/`, `CMakeLists.txt`,
   `CMakePresets.json`, `.clang-format`, `README.md`.
