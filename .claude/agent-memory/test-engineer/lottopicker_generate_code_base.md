@@ -26,6 +26,14 @@ means for that issue type (e.g. closing it directly to release the
 already-created, `status:on-hold` downstream RTVM issues via
 `dependency-check.yml`), not Test Engineer's call to skip.
 
+**Regression pass on trunk (2026-09-05):** After CI/CD's fast-forward
+merge to `main` (no separate merge commit — main just advanced to the
+feature commits), same verification command passed cleanly from a
+clean `main` checkout: 113/113 targets, 1/1 smoke test, `lottopicker`
+runs. Worth checking `git log --oneline -1` on `main` matches the
+commits cited in the merge comment before assuming a merge commit
+exists to diff against.
+
 **Known deferred item, not a test gate:** `docs/ci/windows-verification.yml`
 exists but `.github/workflows/windows-verification.yml` does not yet — a
 human needs to copy it once (GitHub App can't grant itself `workflows`
