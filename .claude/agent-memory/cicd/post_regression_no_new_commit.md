@@ -37,3 +37,10 @@ RTVM note (fdf4264) came back on `status:ready-for-commit`/`agent:cicd`.
 comment that this is trunk regression and hand back to
 `agent:systems-engineer` with `status:ready-for-rtvm-update` (not
 `status:ready-for-commit` — see [[next-line-must-match-labels-applied]]).
+
+Confirmed a 4th time on issue #16 (CORE-204, 2026-09-05): original
+merge 86ca3ed/v1.0.145, TE regression pass + SE's RTVM note both
+landed directly on trunk (e5a7fcf), `issue-16` confirmed ancestor of
+`main`. Same handling; comment brevity rules now apply too (see the
+"Comment brevity" note in cicd.md) — kept the hand-back to a few
+sentences instead of the fuller writeups used on #13-#15.
