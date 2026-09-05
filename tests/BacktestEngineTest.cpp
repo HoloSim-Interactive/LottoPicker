@@ -64,9 +64,9 @@ TEST_CASE("BacktestEngine reports exact hand-verified containment counts when th
         DrawRecord{"2020-01-01", {1, 2, 3, 4, 5, 6}, 9}, // the held-out "actual" draw
     };
 
-    const BacktestResult result = BacktestEngine::run(history, "2020-01-01", /*topN=*/100,
-                                                       zeroGroupWeights(), /*poolMin=*/1,
-                                                       /*halfLifeDraws=*/104, syntheticEras);
+    const BacktestResult result =
+        BacktestEngine::run(history, "2020-01-01", /*topN=*/100, zeroGroupWeights(), /*poolMin=*/1,
+                            /*halfLifeDraws=*/104, syntheticEras);
 
     REQUIRE(result.poolMax == 9);
     REQUIRE(result.topN == 84); // the entire space, not the requested 100
@@ -78,7 +78,7 @@ TEST_CASE("BacktestEngine reports exact hand-verified containment counts when th
     CHECK(result.rank >= 1);
     CHECK(result.rank <= 84);
     CHECK(result.percentile ==
-         Catch::Approx(100.0 * (84.0 - result.rank + 1.0) / 84.0).margin(1e-9));
+          Catch::Approx(100.0 * (84.0 - result.rank + 1.0) / 84.0).margin(1e-9));
 
     REQUIRE(result.observedContainment.size() == 4);
     CHECK(result.observedContainment[3 - kMinContainmentLevel] == 20); // exactly 3 of 6
@@ -91,10 +91,10 @@ TEST_CASE("BacktestEngine reports exact hand-verified containment counts when th
     // cross-checked here against that already-Verified public function,
     // not a second hand-typed formula.
     for (int level = kMinContainmentLevel; level <= kMaxContainmentLevel; ++level) {
-        const double expected =
-            static_cast<double>(result.topN) * PoolSizeNormalizer::hypergeometricProbability(level, 9);
-        CHECK(result.chanceExpectedContainment[static_cast<std::size_t>(level - kMinContainmentLevel)] ==
-             Catch::Approx(expected).margin(1e-9));
+        const double expected = static_cast<double>(result.topN) *
+                                PoolSizeNormalizer::hypergeometricProbability(level, 9);
+        CHECK(result.chanceExpectedContainment[static_cast<std::size_t>(
+                  level - kMinContainmentLevel)] == Catch::Approx(expected).margin(1e-9));
     }
 }
 
@@ -117,13 +117,13 @@ TEST_CASE("BacktestEngine reports \"not found\" when no partial-match variant la
     const std::vector<EraBoundary> syntheticEras = {{"1970-01-01", 12}};
 
     const std::vector<DrawRecord> history = {
-        DrawRecord{"2019-01-01", {1, 2, 3, 4, 5, 6}, 12},   // training draw
+        DrawRecord{"2019-01-01", {1, 2, 3, 4, 5, 6}, 12},    // training draw
         DrawRecord{"2020-01-01", {7, 8, 9, 10, 11, 12}, 12}, // disjoint held-out "actual" draw
     };
 
-    const BacktestResult result = BacktestEngine::run(history, "2020-01-01", /*topN=*/1,
-                                                       zeroGroupWeights(), /*poolMin=*/1,
-                                                       /*halfLifeDraws=*/104, syntheticEras);
+    const BacktestResult result =
+        BacktestEngine::run(history, "2020-01-01", /*topN=*/1, zeroGroupWeights(), /*poolMin=*/1,
+                            /*halfLifeDraws=*/104, syntheticEras);
 
     REQUIRE(result.topN == 1);
     CHECK_FALSE(result.found);
@@ -141,9 +141,9 @@ TEST_CASE("BacktestEngine throws when no draw is dated exactly on the sample dat
         DrawRecord{"2019-01-01", {1, 2, 3, 4, 5, 6}, 9},
     };
 
-    CHECK_THROWS_AS(BacktestEngine::run(history, "2020-01-01", 10, CompositeWeights{}, 1, 104,
-                                        syntheticEras),
-                   BacktestError);
+    CHECK_THROWS_AS(
+        BacktestEngine::run(history, "2020-01-01", 10, CompositeWeights{}, 1, 104, syntheticEras),
+        BacktestError);
 }
 
 TEST_CASE("BacktestEngine throws when no draw exists strictly before the sample date",
@@ -153,9 +153,9 @@ TEST_CASE("BacktestEngine throws when no draw exists strictly before the sample 
         DrawRecord{"2019-01-01", {1, 2, 3, 4, 5, 6}, 9}, // the earliest, and only, record
     };
 
-    CHECK_THROWS_AS(BacktestEngine::run(history, "2019-01-01", 10, CompositeWeights{}, 1, 104,
-                                        syntheticEras),
-                   BacktestError);
+    CHECK_THROWS_AS(
+        BacktestEngine::run(history, "2019-01-01", 10, CompositeWeights{}, 1, 104, syntheticEras),
+        BacktestError);
 }
 
 // The era-appropriate pool bound (not a fixed constant) governs the
@@ -172,9 +172,9 @@ TEST_CASE("BacktestEngine ranks within the pool size in effect on the sample dat
         DrawRecord{"2020-01-01", {1, 2, 3, 4, 5, 6}, 9}, // era B, pool 9
     };
 
-    const BacktestResult result = BacktestEngine::run(history, "2020-01-01", /*topN=*/1,
-                                                       CompositeWeights{}, /*poolMin=*/1,
-                                                       /*halfLifeDraws=*/104, syntheticEras);
+    const BacktestResult result =
+        BacktestEngine::run(history, "2020-01-01", /*topN=*/1, CompositeWeights{}, /*poolMin=*/1,
+                            /*halfLifeDraws=*/104, syntheticEras);
 
     CHECK(result.poolMax == 9);
 }

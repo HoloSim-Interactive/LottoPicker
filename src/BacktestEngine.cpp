@@ -18,7 +18,7 @@ namespace {
 // (DrawRecord::numbers/RankedCombo::combo's shared "sorted ascending"
 // invariant), O(kNumbersPerDraw) rather than a set-based intersection.
 int sharedCount(const std::array<int, kNumbersPerDraw> &a,
-               const std::array<int, kNumbersPerDraw> &b) {
+                const std::array<int, kNumbersPerDraw> &b) {
     int shared = 0;
     std::size_t i = 0;
     std::size_t j = 0;
@@ -40,8 +40,8 @@ int sharedCount(const std::array<int, kNumbersPerDraw> &a,
 
 BacktestResult BacktestEngine::run(const std::vector<DrawRecord> &fullHistory,
                                    const std::string &sampleDate, int topN,
-                                   const CompositeWeights &weights, int poolMin,
-                                   int halfLifeDraws, const std::vector<EraBoundary> &eras) {
+                                   const CompositeWeights &weights, int poolMin, int halfLifeDraws,
+                                   const std::vector<EraBoundary> &eras) {
     const DrawRecord *actual = nullptr;
     for (const DrawRecord &record : fullHistory) {
         if (record.date == sampleDate) {
@@ -74,7 +74,8 @@ BacktestResult BacktestEngine::run(const std::vector<DrawRecord> &fullHistory,
 
     const ModelArtifact model =
         ModelStore::buildArtifact(truncated, /*sourceHash=*/"", poolMin, poolMax, halfLifeDraws);
-    const std::vector<RankedCombo> ranked = RankingEngine::rank(model, topN, weights, poolMin, poolMax);
+    const std::vector<RankedCombo> ranked =
+        RankingEngine::rank(model, topN, weights, poolMin, poolMax);
 
     BacktestResult result;
     result.sampleDate = sampleDate;
@@ -105,7 +106,8 @@ BacktestResult BacktestEngine::run(const std::vector<DrawRecord> &fullHistory,
 
     for (int level = kMinContainmentLevel; level <= kMaxContainmentLevel; ++level) {
         result.chanceExpectedContainment[static_cast<std::size_t>(level - kMinContainmentLevel)] =
-            static_cast<double>(result.topN) * PoolSizeNormalizer::hypergeometricProbability(level, poolMax);
+            static_cast<double>(result.topN) *
+            PoolSizeNormalizer::hypergeometricProbability(level, poolMax);
     }
 
     return result;
