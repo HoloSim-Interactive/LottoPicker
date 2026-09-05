@@ -19,6 +19,7 @@ in `.github/AGENT_LABELS.md`.
 - [DATA-IN-100 CsvIngestor](data_in_100_csv_ingestor.md) — verified via standalone harness (no CLI yet); open row-numbering ambiguity in TP-DATA-IN-100 is pre-flagged, not a fail ground.
 - [RTVM ahead of branch on main](rtvm_ahead_of_branch_on_main.md) — docs/RTVM.md edits can land on main mid-issue before the code merges; check main's copy, not just the branch's, before handing off for RTVM update.
 - [Version.h clang-format nit](version_h_clang_format_nit.md) — pre-existing since scaffolding, not caused by any feature branch; don't count against whatever you're testing.
+- [UI-003 backtest flag](ui_003_backtest_flag.md) — CLI-binary-level verification (no CliArgsTest.cpp exists); row-count-only pass on TP-UI-003 step 2 pending CORE-205's real content, re-check when CORE-205 lands.
 
 ## Platform-specific test considerations
 
