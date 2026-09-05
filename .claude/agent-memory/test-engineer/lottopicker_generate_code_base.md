@@ -85,3 +85,14 @@ confirm RTVM SHA present, rerun full build/ctest (117/117, 10/10 —
 includes issue-7's CsvIngestor suite), spot-recheck the specific TP steps
 directly against the trunk binary. Same hand-off shape even on a second
 pass through the same issue number.
+
+**CORE-200 DecayScorer pass (issue #11, 2026-09-05):** clean `issue-11`
+checkout, same build command, 16/16 ctest pass (10 pre-existing +
+6 new `DecayScorerTest.cpp`). TP-CORE-200's two fixture cases map to
+named tests directly: "favors a number seen only in the most recent
+draw" (`score(7) > score(12)`) and "floors an unseen number's score at
+zero" (`score(40) == 0.0`) — when a test file names its cases after the
+TP language like this, citing the test name in the pass comment is
+enough; no need to hand-verify the arithmetic by hand unless the SDD
+formula itself is in question. Also checked `clang-format --dry-run
+-Werror` on the three new/changed files as SWE claimed — clean.
