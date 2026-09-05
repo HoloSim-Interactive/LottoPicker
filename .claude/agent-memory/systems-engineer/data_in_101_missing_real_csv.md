@@ -1,6 +1,6 @@
 ---
 name: data-in-101-missing-real-csv
-description: DATA-IN-101 (issue #10) — real CSV missing, SA ruled Verified gate is part 1 only, part 2 deferred to DELIV-900; reusable pattern for client-artifact-gated test clauses
+description: DATA-IN-101 — real CSV missing (issue #10), SA ruled Verified gate is part 1 only, part 2 deferred to DELIV-900; closed on issue #27 once real CSV confirmed boundary as 1999-10-24. Reusable pattern for client-artifact-gated test clauses.
 metadata:
   type: project
 ---
@@ -56,3 +56,17 @@ timing of with no ETA, that clause almost certainly belongs decoupled
 from Verified and reframed as a deferred pre-delivery/DELIV-900-style
 check instead of blocking the feature — don't re-escalate to SA for
 the same shape of problem next time; apply this directly.
+
+**Closed out (2026-09-05, issue #27):** the real CSV arrived
+(`data/florida_lotto_full.csv`, 4018 records, commit `be8ef7e`) and
+disagreed with the working-hypothesis boundary — confirmed boundary is
+**1999-10-24**, not 1999-01-01. Software Engineer corrected
+`EraTable.h::eraTable()`, Test Engineer independently re-derived the
+same date from raw CSV data and confirmed. I updated `docs/RTVM.md`'s
+TP-DATA-IN-101 (added a "Resolved" note under the prior ruling, don't
+delete history) and DELIV-900 (deferred check now closed, not
+open-ended). Two flagged-but-out-of-scope design questions remain for
+whoever scopes real-CSV wiring into an actual run: Double Play draws
+in `_full.csv` put two draws on one date (breaks even-spacing
+assumptions), and `X2`-`X5` columns are XTRA-multiplier prize data, not
+drawn numbers — don't let a scorer ingest them.
