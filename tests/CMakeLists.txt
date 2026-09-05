@@ -9,7 +9,10 @@ add_executable(lottopicker_tests
     CsvIngestorTest.cpp
     DecayScorerTest.cpp
     EraTaggerTest.cpp
+    ModelSerializerTest.cpp
+    ModelStoreTest.cpp
     PoolSizeNormalizerTest.cpp
+    Sha256Test.cpp
 )
 target_link_libraries(lottopicker_tests PRIVATE lottopicker_lib Catch2::Catch2WithMain)
 

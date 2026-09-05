@@ -1,22 +1,27 @@
 #include <cstdlib>
+#include <filesystem>
 #include <iostream>
 #include <vector>
 
 #include "lottopicker/CliArgs.h"
 #include "lottopicker/Config.h"
 #include "lottopicker/Errors.h"
+#include "lottopicker/ModelStore.h"
 #include "lottopicker/Version.h"
 
 // Host/entry point only — no domain logic here (see lottopicker_lib in
 // src/CMakeLists.txt). Parses/validates CLI args via CliArgs::parse
 // (UI-001, UI-003), then the config file via Config::parse (UI-002),
-// and converts any LottoPickerError into the documented stderr-message
-// + non-zero-exit-code contract (docs/SDD.md Coding Standards -> Error
-// handling). UI-003 is flag-parsing scope only here: CliArgs::isBacktest
-// selects which message prints below, but the actual CORE-205 backtest
-// engine (and the rest of the ranking pipeline) lands incrementally in
-// later RTVM feature issues -- ingestion isn't even wired into main()
-// yet, so neither path can do real work today.
+// then Stage 1 of docs/SDD.md's pipeline via ModelStore::loadOrBuild
+// (CORE-204: reuse the persisted model artifact if its source hash
+// still matches data_file, otherwise ingest/era-tag/score/normalize/
+// persist a fresh one) -- converting any LottoPickerError into the
+// documented stderr-message + non-zero-exit-code contract (docs/SDD.md
+// Coding Standards -> Error handling). UI-003 is flag-parsing scope
+// only for the mode branch below: CliArgs::isBacktest selects which
+// message prints, but the actual CORE-205 backtest engine and CORE-202/
+// 203's ranking pipeline (Stage 2) land in later RTVM feature issues --
+// this only wires Stage 1 (the model) all the way through.
 int main(int argc, char **argv) {
     const std::vector<std::string> args(argv + 1, argv + argc);
 
@@ -28,6 +33,21 @@ int main(int argc, char **argv) {
         std::cout << "config: " << cliArgs.configPath.string() << "\n";
         std::cout << "data_file: " << config.dataFile.string() << "\n";
         std::cout << "top_n: " << config.topN << "\n";
+
+        const std::filesystem::path modelPath =
+            lottopicker::ModelStore::defaultModelPath(config.dataFile);
+        const lottopicker::ModelStore::LoadOrBuildResult modelResult =
+            lottopicker::ModelStore::loadOrBuild(config.dataFile, modelPath);
+
+        if (modelResult.wasRebuilt) {
+            std::cout << "model: rebuilt (" << modelResult.artifact.drawCount << " draw(s)) -> "
+                      << modelPath.string() << "\n";
+            for (const lottopicker::RowError &rowError : modelResult.ingestErrors) {
+                std::cout << "  row " << rowError.row << ": " << rowError.message << "\n";
+            }
+        } else {
+            std::cout << "model: reused (source unchanged) <- " << modelPath.string() << "\n";
+        }
 
         if (cliArgs.isBacktest()) {
             // Backtest path selected (UI-003): one placeholder line per

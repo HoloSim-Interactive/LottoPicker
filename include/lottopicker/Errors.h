@@ -52,4 +52,20 @@ public:
     explicit ConfigValidationError(const std::string &message) : LottoPickerError(message) {}
 };
 
+// CORE-204/DATA-OUT-301: `data_file` can't be opened/read while
+// computing the source-data hash (ModelStore::computeSourceHash), or a
+// model artifact can't be written to disk (ModelSerializer::write).
+// Distinct from CsvFormatError, which is specifically CsvIngestor's
+// whole-file structural CSV checks -- this can fail even before
+// ingestion runs (hashing happens first) or entirely outside it
+// (serialization I/O). A malformed/corrupt *existing* artifact is
+// deliberately NOT surfaced via this type at the ModelStore level --
+// ModelSerializer::tryRead() swallows that internally and ModelStore
+// treats it the same as "no model yet" (rebuild), since CORE-204 can
+// always regenerate the artifact from the source CSV.
+class ModelStoreError : public LottoPickerError {
+public:
+    explicit ModelStoreError(const std::string &message) : LottoPickerError(message) {}
+};
+
 } // namespace lottopicker
