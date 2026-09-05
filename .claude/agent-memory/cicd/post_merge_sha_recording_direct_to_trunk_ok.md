@@ -79,3 +79,15 @@ comment: I initially wrote `Next: status:ready-for-rtvm-update` out of
 habit before catching that the no-new-work pattern calls for no status
 label at all — posted a correcting follow-up comment rather than
 leaving the wrong Next line for stall-recovery to parse.
+
+Confirmed a seventh time on issue #27 (DATA-IN-101 part 2, 2026-09-05)
+after a full trunk-merge (`e578223`, tag v1.0.249) + regression cycle:
+SE's `22666b8` recorded TE's already-reported trunk regression pass
+(`b4a8adb`) direct to `main`. `origin/main..origin/issue-27` empty
+after unshallowing (see [[shallow_clone_merge_base]] — checkout was
+shallow going in, `git diff origin/main..origin/issue-27` showed a
+misleading pile of unrelated file diffs before unshallowing/checking
+merge-base properly; always confirm shallow-ness first on this repo,
+it recurs almost every session). DELIV-901 still Approved, so no
+release. Hand-off: no new status label, straight to
+`agent:systems-engineer`.

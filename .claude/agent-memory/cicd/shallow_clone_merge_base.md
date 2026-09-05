@@ -36,3 +36,14 @@ merge proceeded normally (one real conflict after that, see
 feature branch that Systems/Test Engineer have been actively working
 off of main as this same shallow-clone artifact, not a real divergence
 — check shallow-ness before treating it as a genuine history problem.
+
+**Recurs almost every session** — checkout starts shallow by default.
+On issue #27 (2026-09-05), `git diff origin/main..origin/issue-27
+--stat` while still shallow showed a big, misleading pile of unrelated
+file diffs (deleted workflow files, CMakePresets.json, etc.) that
+looked like real divergence; `is-shallow-repository` was true,
+`fetch --unshallow` fixed it, and `git log --oneline
+origin/main..origin/issue-27` came back genuinely empty (branch fully
+merged already). Make `git rev-parse --is-shallow-repository` a
+standing first check before trusting *any* diff/log between
+`origin/main` and a feature branch, not just before a merge.
