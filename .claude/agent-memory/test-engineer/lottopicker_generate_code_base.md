@@ -40,6 +40,17 @@ human needs to copy it once (GitHub App can't grant itself `workflows`
 permission). Deferred to DELIV-901 per Software Engineer's comment on #5;
 don't treat its absence as a failure on feature issues before then.
 
+**Post-merge regression fast path (issue #8, 2026-09-05):** when CI/CD or
+Systems Engineer hands back `status:ready-for-test` purely for
+"regression testing needed" after a trunk merge (no new code, RTVM
+already updated with the commit SHA recorded), just pull `main`, confirm
+the RTVM row and SHA match what was reported, and rerun the standard
+build/test command on trunk. On pass, hand off the normal way
+(`status:ready-for-rtvm-update` → `agent:systems-engineer`) even though
+RTVM is already current — Systems Engineer's fast path (per
+AGENT_LABELS.md) is to no-op through to CI/CD when nothing needs
+changing, not for Test Engineer to skip straight to CI/CD.
+
 **Inspection-type RTVM items (e.g. CORE-207, issue #8, 2026-09-05) need no
 build/runtime verification at all** — the TP-CORE-xxx test procedure is a
 checklist against the delivered doc's own content (source count, per-source
