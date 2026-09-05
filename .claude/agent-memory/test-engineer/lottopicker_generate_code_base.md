@@ -129,3 +129,13 @@ status in RTVM, routed back for regression. Fast-path confirmed again:
 `git checkout main && git pull`, RTVM row's SHA matched, clean rebuild
 (`rm -rf build`), 23/23 ctest pass (16 prior + CORE-201's additions all
 present together). No new harness needed.
+
+**UI-002 regression pass on trunk, same issue #9, second hand-off
+(2026-09-05):** after CI/CD's 7-reset-cycle merge of `issue-9` into
+`main` at 302c87a and Systems Engineer recorded the SHA + Verified
+status in RTVM, routed back for regression. `main` @ c44ed31, clean
+rebuild, 35/35 ctest pass (up from 19 — EraTagger/EraTable and other
+concurrent-issue suites now on trunk too). Re-verified TP-UI-002's
+three cases directly against the trunk binary again. Fast path holds
+even after a merge with many reset-and-redo cycles; nothing
+issue-9-specific broke.
