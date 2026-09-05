@@ -73,3 +73,10 @@ Verified with SHA 5e7f0fc recorded from the commit-confirmation step;
 this round only updated the status note's parenthetical from "trunk
 regression pending" to "trunk regression passed, 23/23". Same
 fast-path hand-off to `agent:cicd` afterward regardless.
+
+Confirmed the first-ever-pass case again on issue #14 (CORE-206,
+2026-09-05): Test Engineer's `ready-for-rtvm-update` was the first
+report for this issue, no CI/CD merge SHA yet, so the edit went to
+`issue-14` (already existed) with status text "In Test (... pending
+CI/CD merge)", not `main`/Verified. Same fast-path hand-off to
+`agent:cicd` afterward.
