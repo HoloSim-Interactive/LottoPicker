@@ -4,6 +4,7 @@
 # alongside its source file.
 add_executable(lottopicker_tests
     SmokeTest.cpp
+    CsvIngestorTest.cpp
 )
 target_link_libraries(lottopicker_tests PRIVATE lottopicker_lib Catch2::Catch2WithMain)
 
