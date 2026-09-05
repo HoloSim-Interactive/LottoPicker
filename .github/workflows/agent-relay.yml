@@ -1,12 +1,20 @@
 name: agent-relay
 #
-# GITHUB-HOSTED (2026-09-05): runs on ubuntu-latest. The template's
-# self-hosted "agents" pool exists because a PRIVATE repo's hosted minutes
-# ran out; this repo is PUBLIC, where hosted runners are free and
-# unlimited, and the org's two Windows runners are neither granted to this
-# repo nor idle. Every pickup gets its own fresh VM, so concurrency is
-# bounded only by the per-issue group below. Claude Code is installed by
-# the action itself on Linux -- no path_to_claude_code_executable.
+# GITHUB-HOSTED UBUNTU (2026-09-05, same configuration as NAADAP): runs on
+# ubuntu-latest. This repo is PUBLIC, where hosted standard runners are
+# free and unlimited, so the "minutes exhausted" constraint that pushed
+# the template's other projects onto self-hosted listeners does not apply.
+#
+# WHY NOT SELF-HOSTED HERE: inherited from the template as
+# `runs-on: [self-hosted, agents]`, which could never schedule on this
+# repo. GitHub refuses self-hosted runners for PUBLIC repositories unless
+# the runner group opts in, and HoloSim-Interactive's Default group has
+# allows_public_repositories: false -- so the kickoff's first two relay
+# runs (33946697125, 33947045861) sat queued indefinitely rather than
+# failing, because a never-matched runs-on never errors. Claude Code is
+# installed by the action itself on Linux -- path_to_claude_code_executable
+# must stay absent, since the template's Windows path does not exist on a
+# GitHub VM.
 
 # Fires whenever an "agent:*" label lands on an issue. Label changes
 # are the sole trigger -- comments never trigger anything, by design.
