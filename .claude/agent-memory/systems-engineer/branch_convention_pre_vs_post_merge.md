@@ -80,3 +80,13 @@ report for this issue, no CI/CD merge SHA yet, so the edit went to
 `issue-14` (already existed) with status text "In Test (... pending
 CI/CD merge)", not `main`/Verified. Same fast-path hand-off to
 `agent:cicd` afterward.
+
+Confirmed a fourth time on issue #15 (CORE-202, 2026-09-05), same
+shape as #11/#14: first-ever `ready-for-rtvm-update`, no CI/CD merge
+SHA yet, edit went to `issue-15` (already existed), status text "In
+Test (... pending CI/CD merge)". Also flagged SWE's forward-looking
+scope note (no config surface yet for `CompositeWeights` re-tuning)
+onto the already-created downstream issue #17 (CORE-203) as an
+informational comment, since that's the issue that will actually wire
+`CompositeScorer` into the pipeline — not an RTVM change itself, just
+context-preservation so it isn't lost between issue threads.
