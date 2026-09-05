@@ -25,3 +25,8 @@ later. If a push race forces a reset-and-redo (see
 redo. If a bare-title merge does slip through, don't try to force-push
 a fix — note the gap in the issue comment/commit-adjacent memory
 instead and move on; leave history as-is.
+
+Issue #17/CORE-203 (890ce24) did it right: full body passed via
+heredoc into `git merge --no-ff -m`, pushed clean on the first try, no
+race. Worth doing this way every time — costs nothing and avoids the
+permanent-gap problem above.
