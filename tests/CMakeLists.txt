@@ -5,6 +5,7 @@
 add_executable(lottopicker_tests
     SmokeTest.cpp
     CooccurrenceScorerTest.cpp
+    ConfigTest.cpp
     CsvIngestorTest.cpp
     DecayScorerTest.cpp
 )

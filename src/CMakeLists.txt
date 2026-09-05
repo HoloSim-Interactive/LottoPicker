@@ -6,11 +6,12 @@
 #
 # STATIC now that feature source files have landed (CliArgs.cpp, RTVM
 # UI-001; CsvIngestor.cpp, RTVM DATA-IN-100; DecayScorer.cpp, RTVM
-# CORE-200; CooccurrenceScorer.cpp, RTVM CORE-201). Add each new
-# feature's .cpp here as it lands.
+# CORE-200; CooccurrenceScorer.cpp, RTVM CORE-201; Config.cpp, RTVM
+# UI-002). Add each new feature's .cpp here as it lands.
 add_library(lottopicker_lib STATIC
     CliArgs.cpp
     CooccurrenceScorer.cpp
+    Config.cpp
     CsvIngestor.cpp
     DecayScorer.cpp
 )

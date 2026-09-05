@@ -20,6 +20,7 @@ in `.github/AGENT_LABELS.md`.
 - [LottoPicker error handling](lottopicker_error_handling.md) — typed-exception pattern (UI-001, issue #6) to extend for future validation errors, plus a clang-format pointer-alignment gotcha.
 - [CORE-201 co-occurrence scoring](core_201_cooccurrence_scoring.md) — CooccurrenceScorer design (issue #12) and the call to re-derive CORE-200's decay formula rather than block on its not-yet-merged parallel issue.
 - [CORE-200 DecayScorer](core_200_decay_scorer.md) — sorts history by date internally rather than trusting caller order; scope boundary vs. CORE-206 normalization (issue #11).
+- [UI-002 config parsing](ui_002_config_parsing.md) — Config::parse design (issue #9), key-check-order/malformed-line choices I made, and a pre-existing CsvFormatError/LottoPickerError inheritance gap flagged for whoever wires ingestion into main().
 
 ## Platform-specific notes
 

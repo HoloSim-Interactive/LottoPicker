@@ -75,6 +75,19 @@ groups); worth reading the test file directly against the TP text rather
 than trusting the pass count alone, since Catch2 tags (`[CORE-201]`) don't
 by themselves prove fixture values match the RTVM's literal example.
 
+**UI-002 pass (issue #9, 2026-09-05):** confirms the earlier UI-001 note —
+"data_file matches the fixture values exactly" in TP-UI-002 part 3 means the
+*resolved* absolute path (config's own directory + the fixture's relative
+value), not a literal string match against what's written in the config
+file. `ConfigTest.cpp` already asserts this (`config.dataFile ==
+path.parent_path() / "fixture_5draws.csv"`), and I re-confirmed it at the
+CLI level by invoking the binary from a cwd different from the config's
+directory — the printed `data_file` came back as the correct absolute path,
+not the literal relative string. If a future TP says a field must "match
+the fixture value exactly" for a path-typed key, check whether resolution
+is part of that field's documented contract (SDD "Interfaces & File
+Formats") before treating a resolved-vs-literal mismatch as a defect.
+
 **UI-001 regression pass, same issue #6, second hand-off (2026-09-05):**
 after CI/CD merged issue-6's 85b764f into `main` as 8fd22b2 (real merge
 commit this time, not fast-forward — trunk had moved from issue-7's
