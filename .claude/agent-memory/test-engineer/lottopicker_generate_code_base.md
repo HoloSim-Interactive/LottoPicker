@@ -168,3 +168,11 @@ routed back for regression. `main` @ 5b1a954, clean rebuild, 47/47
 ctest pass (unchanged count). Confirms tag-only merges (no full-table
 release) still go through the same regression fast path as any other
 trunk merge.
+
+**CORE-203 regression pass on trunk, same issue #17, second hand-off
+(2026-09-05):** after CI/CD merged `issue-17` to `main` at 890ce24
+(tag v1.0.161, tag-only — several RTVM items still Approved) and SE
+recorded SHA + Verified in RTVM (f04b68a), routed back for regression.
+`main` @ f04b68a, clean rebuild from scratch, 74/74 ctest pass
+(unchanged count, includes `RankingEngineTest.cpp`). Binary's
+no-arg usage line unchanged. Same fast path, nothing new.
