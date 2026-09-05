@@ -65,3 +65,12 @@ merge 6cd0bfc/v1.0.181, TE regression pass + SE's RTVM note landed
 directly on trunk (07e08ec), `issue-21` confirmed ancestor of `main`.
 Same handling; brief hand-back to `agent:systems-engineer` with
 `status:ready-for-rtvm-update`.
+
+Confirmed an 8th time on issue #20 (CORE-205, 2026-09-05): original
+merge e9d03d8/a223539/v1.0.194 (with a concurrent-race conflict
+resolved against issue #21), TE regression pass + SE's RTVM note
+landed directly on trunk (5f92a31), `issue-20` confirmed ancestor of
+`main`. Same handling; hand back to `agent:systems-engineer` with
+no new status label (this hand-off arrived as
+`status:ready-for-commit`, not `status:ready-for-rtvm-update`, so
+just removed it rather than swapping in the other value).
