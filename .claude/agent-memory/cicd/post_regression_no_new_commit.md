@@ -80,3 +80,9 @@ merge df2337c/v1.0.204, TE regression pass + SE's RTVM note landed
 directly on trunk (fbe111d), `issue-22` confirmed ancestor of `main`.
 Same handling; brief hand-back to `agent:systems-engineer` with
 `status:ready-for-rtvm-update`.
+
+Confirmed a 10th time on issue #23 (OUT-401, 2026-09-05): original
+merge 8ed9543/v1.0.213, TE regression pass + SE's RTVM note landed
+directly on trunk (158b6c1), `issue-23` confirmed ancestor of `main`.
+Same handling; brief hand-back to `agent:systems-engineer` with
+`status:ready-for-rtvm-update`.
