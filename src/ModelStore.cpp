@@ -1,5 +1,7 @@
 #include "lottopicker/ModelStore.h"
 
+#include <algorithm>
+#include <array>
 #include <fstream>
 #include <optional>
 #include <sstream>
@@ -14,6 +16,50 @@
 namespace lottopicker {
 
 namespace {
+
+// baselineCooc[g] = Sum_d w(age(d)) * p(g, n_era(d)), per docs/SDD.md's
+// Algorithm design -- the same computation PoolSizeNormalizer::normalize
+// performs internally (see its header comment's "key algebraic
+// simplification"), duplicated here rather than exposed from that
+// already-Verified class: PoolSizeNormalizer::Result has no accessor for
+// its private baseline scalars (by design, see ModelStore's own
+// per-group-key recomputation just below), and both
+// CooccurrenceScorer::decayWeight and PoolSizeNormalizer::hypergeometricProbability
+// are already public static functions built exactly for reuse like this.
+// `history` must already be era-tagged (DATA-IN-101).
+std::array<double, kGroupSizeCount> computeBaselineCooc(const std::vector<DrawRecord> &history,
+                                                        int halfLifeDraws) {
+    std::array<double, kGroupSizeCount> baseline{};
+    if (history.empty()) {
+        return baseline;
+    }
+
+    std::vector<const DrawRecord *> byDate;
+    byDate.reserve(history.size());
+    for (const DrawRecord &record : history) {
+        byDate.push_back(&record);
+    }
+    std::stable_sort(byDate.begin(), byDate.end(),
+                     [](const DrawRecord *a, const DrawRecord *b) { return a->date < b->date; });
+
+    const int mostRecentIndex = static_cast<int>(byDate.size()) - 1;
+    for (int index = 0; index <= mostRecentIndex; ++index) {
+        const DrawRecord &draw = *byDate[static_cast<std::size_t>(index)];
+        const int age = mostRecentIndex - index;
+        const double weight = CooccurrenceScorer::decayWeight(age, halfLifeDraws);
+        // Same untagged-record fallback as PoolSizeNormalizer::normalize:
+        // poolSize == 0 (or negative) means "not yet era-tagged" -- fall
+        // back to the widest, most-current documented pool rather than
+        // dividing by zero. Should not occur on a properly-tagged
+        // pipeline run.
+        const int nEra = draw.poolSize > 0 ? draw.poolSize : kCurrentPoolMax;
+        for (int groupSize = kMinGroupSize; groupSize <= kMaxGroupSize; ++groupSize) {
+            baseline[static_cast<std::size_t>(groupSize - kMinGroupSize)] +=
+                weight * PoolSizeNormalizer::hypergeometricProbability(groupSize, nEra);
+        }
+    }
+    return baseline;
+}
 
 // Builds a fresh ModelArtifact from an already-ingested, already-era-
 // tagged `history` -- CORE-200/201's raw scores run through CORE-206's
@@ -65,6 +111,8 @@ ModelArtifact buildArtifact(const std::vector<DrawRecord> &history, const std::s
             out[group] = normalized.normCooc(group);
         }
     }
+
+    artifact.baselineCooc = computeBaselineCooc(history, halfLifeDraws);
 
     return artifact;
 }

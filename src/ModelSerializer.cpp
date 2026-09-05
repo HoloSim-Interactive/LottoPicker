@@ -13,10 +13,11 @@ namespace lottopicker {
 
 namespace {
 
-constexpr const char *kHeaderLine = "LOTTOPICKER_MODEL v1";
+constexpr const char *kHeaderLine = "LOTTOPICKER_MODEL v2";
 constexpr const char *kSourceHashPrefix = "source_hash=";
 constexpr const char *kDateRangePrefix = "date_range=";
 constexpr const char *kDrawCountPrefix = "draw_count=";
+constexpr const char *kBaselineCoocPrefix = "baseline_cooc=";
 constexpr const char *kPerNumberSection = "[per_number]";
 constexpr const char *kGroupSectionPrefix = "[group_scores:";
 
@@ -81,6 +82,15 @@ void ModelSerializer::write(const ModelArtifact &artifact, const std::filesystem
     out << kSourceHashPrefix << artifact.sourceHash << "\n";
     out << kDateRangePrefix << artifact.earliestDate << "," << artifact.latestDate << "\n";
     out << kDrawCountPrefix << artifact.drawCount << "\n";
+
+    out << kBaselineCoocPrefix;
+    for (std::size_t i = 0; i < artifact.baselineCooc.size(); ++i) {
+        if (i > 0) {
+            out << ",";
+        }
+        out << formatDouble(artifact.baselineCooc[i]);
+    }
+    out << "\n";
 
     out << kPerNumberSection << "\n";
     for (const auto &[number, score] : artifact.perNumber) {
@@ -153,6 +163,20 @@ ModelArtifact ModelSerializer::read(const std::filesystem::path &path) {
     }
     artifact.drawCount = static_cast<std::size_t>(
         parseInt(line.substr(std::char_traits<char>::length(kDrawCountPrefix)), "draw_count"));
+
+    if (!nextLine(line) || line.rfind(kBaselineCoocPrefix, 0) != 0) {
+        throw ModelStoreError("model artifact: missing baseline_cooc in " + path.string());
+    }
+    {
+        const std::vector<std::string> fields =
+            splitCsv(line.substr(std::char_traits<char>::length(kBaselineCoocPrefix)));
+        if (fields.size() != kGroupSizeCount) {
+            throw ModelStoreError("model artifact: malformed baseline_cooc in " + path.string());
+        }
+        for (std::size_t i = 0; i < fields.size(); ++i) {
+            artifact.baselineCooc[i] = parseDouble(fields[i], "baseline_cooc");
+        }
+    }
 
     if (!nextLine(line) || line != kPerNumberSection) {
         throw ModelStoreError("model artifact: missing [per_number] section in " + path.string());
