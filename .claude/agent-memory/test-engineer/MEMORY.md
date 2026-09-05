@@ -16,6 +16,7 @@ in `.github/AGENT_LABELS.md`.
 ## Test harness notes
 
 - [LottoPicker Generate Code Base](lottopicker_generate_code_base.md) — build/test verification commands, and how no-RTVM-item issues still route through the normal pass hand-off.
+- [DATA-IN-100 CsvIngestor](data_in_100_csv_ingestor.md) — verified via standalone harness (no CLI yet); open row-numbering ambiguity in TP-DATA-IN-100 is pre-flagged, not a fail ground.
 
 ## Platform-specific test considerations
 
