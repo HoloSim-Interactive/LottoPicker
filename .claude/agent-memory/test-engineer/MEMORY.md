@@ -22,6 +22,7 @@ in `.github/AGENT_LABELS.md`.
 - [UI-003 backtest flag](ui_003_backtest_flag.md) — CLI-binary-level verification (no CliArgsTest.cpp exists); row-count-only pass on TP-UI-003 step 2 pending CORE-205's real content, re-check when CORE-205 lands.
 - [CORE-202 CompositeScorer pass](core_202_composite_scorer.md) — hand-derived both TP-CORE-202 fixture values independently (not just trusted the code comments); matched exactly.
 - [CORE-204 ModelStore](core_204_model_store.md) — first CLI pipeline wiring; manual 4-run recipe for TP-CORE-204's reused/rebuilt behavior since no shipped fixtures exist yet.
+- [DATA-OUT-301 ModelSerializer](data_out_301_model_serializer.md) — 2nd confirmed "implemented early under a different issue, paperwork-only hand-off, no new branch commit" case.
 
 ## Platform-specific test considerations
 
