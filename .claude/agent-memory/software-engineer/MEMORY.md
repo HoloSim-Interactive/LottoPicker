@@ -39,5 +39,6 @@ in `.github/AGENT_LABELS.md`.
 ## Reusable solutions
 
 - [Inspection-type RTVM items](inspection_type_rtvm_items.md) — CORE-207 (issue #8): no branch/commit needed when the item's test method is Inspection and the artifact was already delivered elsewhere; just verify against the TP-* checklist and hand off.
+- [Rebase before push gotcha](rebase_before_push_gotcha.md) — push rejected over a workflows-permission error though my branch never touched `.github/workflows`; caused by stale local `main`, fixed with fetch+rebase before the final push (issue #27).
 
 ## Coding standards
