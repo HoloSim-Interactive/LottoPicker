@@ -51,8 +51,8 @@ Blocked / Withdrawn.
 | CORE-203 | Score the full ~22.9M-combination space and retain only the configured top-N (default 100) without materializing the full ranked list in memory. | SN-1 | Test + Analysis | Approved | |
 | CORE-204 | Persist the derived statistical model (per-number decay + per-group co-occurrence scores) as its own data artifact, computed once and reused across ranking runs unless the underlying historical data has changed. | SN-1 | Test | Approved | |
 | CORE-205 | Backtest engine: for a chosen sample date, run the model using only data available up to that date, then report the actual draw's rank/percentile (or "not found in top-N") and partial-match containment counts at the 3/4/5/6 level. | SN-2, SN-3 | Test | Approved | |
-| CORE-206 | Historical pool-size normalization: draws recorded under a different historical pool size are incorporated into the current-era model via a documented, justified normalization method, not discarded. The requirement (normalize, don't discard) is confirmed; the normalization method itself is an open algorithmic design question for Systems Engineer/Solutions Architect during SDD, informed by CORE-207's research. | SN-6 | Test | Approved (method: Draft, resolved in SDD) | |
-| CORE-207 | Comparative research task: produce a written research summary surveying published statistical/algorithmic approaches to ranking bounded random draws by recurrence likelihood (papers, prior write-ups, open-source repos), citing at least 3 distinct sources, with a documented recommendation that feeds CORE-202's composite formula and CORE-206's normalization approach. | SN-5 | Inspection | Approved | |
+| CORE-206 | Historical pool-size normalization: draws recorded under a different historical pool size are incorporated into the current-era model via a documented, justified normalization method, not discarded. The requirement (normalize, don't discard) is confirmed; normalization method resolved in `docs/SDD.md` §Architecture → Algorithm Design (observed-minus-chance-expected via each era's hypergeometric baseline), informed by CORE-207's research. | SN-6 | Test | Approved (method: Resolved in SDD) | |
+| CORE-207 | Comparative research task: produce a written research summary surveying published statistical/algorithmic approaches to ranking bounded random draws by recurrence likelihood (papers, prior write-ups, open-source repos), citing at least 3 distinct sources, with a documented recommendation that feeds CORE-202's composite formula and CORE-206's normalization approach. Delivered: `docs/research/CORE-207-comparative-research.md` (5 sources: 1 peer-reviewed paper, 2 open-source repos, 2 Wikipedia references). | SN-5 | Inspection | Approved (summary delivered, formal Inspection pending its feature issue) | |
 | DATA-OUT-300 | Ranked-list output structure: ordered (rank, 6-number combination, composite score) records for the retained top-N. | SN-1 | Test | Approved | |
 | DATA-OUT-301 | Persisted statistical model schema (pairs with CORE-204): documented file format holding per-number decay scores, per-group co-occurrence scores, and metadata (source data identity/hash, date range covered) sufficient to detect staleness. | SN-1 | Test | Approved | |
 | DATA-OUT-302 | Backtest report structure (pairs with CORE-205): per sampled year, the actual draw's numbers, its rank/percentile (or "not found"), and partial-match containment counts for 3/4/5/6. | SN-2, SN-3 | Test | Approved | |
@@ -79,16 +79,17 @@ Blocked / Withdrawn.
 2. Fixture config with `top_n=0` and, separately, `top_n=-5`. Expected: validation error stating top-N must be a positive integer, for both.
 3. Well-formed fixture config (`data_file=fixture_5draws.csv`, `top_n=10`). Expected: internal Config representation's `data_file` and `top_n` fields match the fixture values exactly.
 
-**TP-UI-003** — Objective: backtest mode is invocable. (Exact flag/key name finalized in SDD; update this procedure to match once chosen.)
-1. Invoke the tool in backtest mode against fixture history `fixture_10years.csv` with sample date `2015-06-15`. Expected: the tool runs the CORE-205 backtest path (not the normal ranking path) and completes without crashing or silently ignoring the mode selection.
+**TP-UI-003** — Objective: backtest mode is invocable via `--backtest <dates>` (finalized in `docs/SDD.md` §Interfaces & File Formats).
+1. Invoke `lottopicker <config> --backtest 2015-06-15` against fixture history `fixture_10years.csv`. Expected: the tool runs the CORE-205 backtest path (not the normal ranking path) and completes without crashing or silently ignoring the mode selection.
+2. Invoke with a comma-separated list, `--backtest 2010-03-01,2015-06-15,2020-11-20`. Expected: exactly 3 report rows, one per listed date, per DATA-OUT-302.
 
 **TP-DATA-IN-100** — Objective: CSV ingestion and malformed-row handling.
 1. Fixture CSV with 10 well-formed rows (date + 6 numbers each). Expected: exactly 10 in-memory draw records, each matching the fixture's date and numbers.
 2. Fixture CSV with row 4 containing only 5 numbers and row 7 containing a number of 60 (outside the 1–53 current pool). Expected: both rows reported as row-specific errors (e.g. "row 4: expected 6 numbers, found 5"; "row 7: number 60 outside valid pool range"); the other 8 valid rows still ingest successfully. (If SDD instead decides "reject whole file on any bad row," this procedure is updated to match that decision — flagged as an open detail, not yet fixed.)
 
 **TP-DATA-IN-101** — Objective: pool-size era tagging.
-1. Fixture history spanning a synthetic rule-change date (e.g. draws dated before 2001-01-01 belong to era A, on/after belong to era B — using the real rule-change date(s) SDD research confirms). Expected: every record's tagged pool size matches its era.
-Status note: depends on the rule-change date table being compiled during SDD research (CORE-207); finalize against real dates then.
+1. Fixture history spanning a synthetic rule-change date (e.g. draws dated before 2001-01-01 belong to era A, on/after belong to era B). Expected: every record's tagged pool size matches its era.
+2. Real-data check: era boundary is 1988 (6/49 launch) → 1999 (6/53) per `docs/SDD.md`'s Algorithm Design section — flagged there as a working hypothesis from a secondary source, not the Florida Lottery's own archive. Expected: Software Engineer cross-checks this boundary against the actual client-supplied CSV's observed number ranges per date range during implementation, and corrects the one-line era table in code if the real data disagrees, before this item can move to Verified.
 
 **TP-CORE-200** — Objective: decay scoring favors recency.
 1. Synthetic 5-draw fixture history where number 7 appears only in the most recent draw and number 12 appears only in the oldest draw. Expected: `score(7) > score(12)`.
@@ -113,7 +114,10 @@ Status note: depends on the rule-change date table being compiled during SDD res
 1. Fixture history through synthetic year Y with one held-out draw known in advance, constructed so it lands inside the top-100. Expected: reported containment counts (e.g. "2 combinations in top-100 match exactly 4 of 6 numbers") match a hand-verified expected result for that fixture.
 2. Repeat with a held-out draw constructed so none of its partial-match variants land in the top-N. Expected: report states "not found in top-N" rather than a false rank.
 
-**TP-CORE-206** — Objective: pool-size normalization. Deferred — concrete test input values and expected output will be written once the normalization method is chosen in SDD (tracked as an open design action, not blocking approval of the requirement itself).
+**TP-CORE-206** — Objective: pool-size normalization, observed-minus-chance-expected method (`docs/SDD.md` §Algorithm Design).
+1. Synthetic fixture with two eras: era A (pool size 49, 3 draws) and era B (pool size 53, 5 draws), with a hand-pickable number `k` appearing in 2 of the 3 era-A draws and 2 of the 5 era-B draws. Expected: `norm_decay(k)` reflects `k`'s occurrences relative to each era's own chance rate (`6/49` vs `6/53`) rather than a flat raw count of 4 — hand-computed expected value within 1e-6 tolerance.
+2. A group fully contained within only pre-change-era draws is not discarded: its `norm_cooc(group)` is nonzero and contributes to the final composite score for any combination containing it (confirms "normalize, don't discard" against an actual scoring run, not just the era-tagging step alone).
+3. `expected_count(group, era)` matches the hand-computed hypergeometric value `C(n_era - g, 6 - g) / C(n_era, 6) × draws_in_era` for at least one group size `g` and one era in the fixture.
 
 **TP-CORE-207** — Objective: research summary completeness (Inspection, not a runtime test).
 1. Confirm the summary document cites at least 3 distinct sources (a published paper, a prior study/write-up, or an open-source repo).
