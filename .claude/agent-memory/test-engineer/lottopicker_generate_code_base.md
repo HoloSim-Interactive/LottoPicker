@@ -151,3 +151,11 @@ concurrent-issue suites now on trunk too). Re-verified TP-UI-002's
 three cases directly against the trunk binary again. Fast path holds
 even after a merge with many reset-and-redo cycles; nothing
 issue-9-specific broke.
+
+**CORE-206 regression pass on trunk, same issue #14, second hand-off
+(2026-09-05):** after CI/CD merged `issue-14` to `main` at d235ced and
+SE recorded that SHA + Verified status in RTVM (commit 36e030a on
+main), routed back for regression. `main` @ 36e030a, clean rebuild,
+42/42 ctest pass (unchanged count — no other concurrent work landed
+between the original pass and this regression check). Straightforward
+fast-path case, no surprises.
