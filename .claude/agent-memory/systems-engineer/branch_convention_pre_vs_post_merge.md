@@ -47,3 +47,12 @@ pending" and needed updating to reflect the actual pass + trunk HEAD
 SHA), pushed directly to `main` per the same rule — SHA/status text
 tweaks after a reported merge are edits to already-current trunk
 state, not pre-merge collaboration.
+
+Confirmed a third time on issue #6 (UI-001, 2026-09-05), same shape as
+#7: after CI/CD's merge (8fd22b2) and the "regression testing needed"
+hand-off, Test Engineer's regression pass came back with a trunk HEAD
+SHA (5111c63). Updated the row's status note from "trunk regression
+pending" to name that SHA, pushed direct to `main`, then handed off
+`status:ready-for-commit` → `agent:cicd` per the fast path even though
+CI/CD will likely find nothing new to merge (as it didn't on #7) —
+that's expected and not an error, it's how this chain formally closes.
