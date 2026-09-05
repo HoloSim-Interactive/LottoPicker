@@ -40,3 +40,10 @@ needed or made this round — but the fast path (per `.github/AGENT_LABELS.md`)
 still routes to `agent:cicd` with `status:ready-for-commit` regardless
 of whether anything actually changed. Don't skip the CI/CD hand-off
 just because the RTVM row didn't need editing.
+
+Confirmed again on issue #7 (DATA-IN-100, 2026-09-05): here the RTVM
+row *did* need a small edit (status note said "regression testing
+pending" and needed updating to reflect the actual pass + trunk HEAD
+SHA), pushed directly to `main` per the same rule — SHA/status text
+tweaks after a reported merge are edits to already-current trunk
+state, not pre-merge collaboration.
