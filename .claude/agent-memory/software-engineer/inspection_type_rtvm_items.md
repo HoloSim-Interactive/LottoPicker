@@ -1,6 +1,6 @@
 ---
 name: inspection-type-rtvm-items
-description: How to handle an RTVM line item whose test method is Inspection rather than Test, when the artifact already exists — no branch/commit needed
+description: How to handle an RTVM item (Inspection method, or Test method already satisfied by a prior scope call) when the artifact/code already exists — no branch/commit needed
 metadata:
   type: project
 ---
@@ -31,3 +31,18 @@ inventing work.
 4. Hand off straight to Test Engineer (`status:ready-for-test`) the
    same as a coded feature — Inspection sign-off still flows through
    Test Engineer, not directly to Systems Engineer/RTVM update.
+
+**Second occurrence, different flavor — DATA-OUT-301 (issue #18, a
+Test-method item, not Inspection):** [[core_204_model_store]] recorded
+a deliberate scope call in issue #16 to implement DATA-OUT-301's
+`ModelSerializer` (and its dedicated `ModelSerializerTest.cpp`) early,
+because CORE-204's own test procedure needed a real load/persist
+mechanism to be checkable. When #18 was later released (Finish-Start
+dependency on #16 satisfied), there was nothing left to build: I
+rebuilt from a clean tree, ran `lottopicker_tests "[DATA-OUT-301]"`
+(6 cases / 8 assertions, all pass) plus the full suite as a regression
+check, and handed off with no new branch/commit — same shape as the
+Inspection case above, just arrived at via an earlier scope decision
+instead of the RTVM's test-method column. General lesson: before
+assuming a Test-method RTVM item needs new code, check whether a prior
+issue's memory already claims it as a scope-overlap delivery.

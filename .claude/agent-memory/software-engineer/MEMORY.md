@@ -31,6 +31,6 @@ in `.github/AGENT_LABELS.md`.
 
 ## Reusable solutions
 
-- [Inspection-type RTVM items](inspection_type_rtvm_items.md) — CORE-207 (issue #8): no branch/commit needed when the item's test method is Inspection and the artifact was already delivered elsewhere; just verify against the TP-* checklist and hand off.
+- [Inspection-type RTVM items](inspection_type_rtvm_items.md) — CORE-207 (#8) and DATA-OUT-301 (#18): no branch/commit needed when the artifact/code was already delivered elsewhere (Inspection method, or a prior scope call); verify against TP-* and hand off.
 
 ## Coding standards
