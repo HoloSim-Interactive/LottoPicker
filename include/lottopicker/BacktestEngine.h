@@ -28,11 +28,20 @@ inline constexpr int kMaxContainmentLevel = kNumbersPerDraw;
 inline constexpr std::size_t kContainmentLevelCount =
     static_cast<std::size_t>(kMaxContainmentLevel - kMinContainmentLevel + 1);
 
-// CORE-205's result for one sample date -- not yet DATA-OUT-302's own
-// documented report-row structure (that's issue #22, a separate,
-// dependent RTVM item deliberately left on hold until this one lands),
-// but the concrete data DATA-OUT-302 will be built from, the same
-// relationship RankedCombo (CORE-203) already has to DATA-OUT-300.
+// DATA-OUT-302: one backtest report row for a single sampled date --
+// the actual draw's numbers, its rank/percentile (or "not found"), and
+// partial-match containment counts at the 3/4/5/6 level. This struct,
+// as produced by CORE-205's BacktestEngine::run below, *is* DATA-OUT-302's
+// report-row structure -- the same relationship RankedCombo (CORE-203)
+// already has to DATA-OUT-300 (see RankingEngine.h's header comment).
+// The full report for a `--backtest` invocation (UI-003) with N sample
+// dates is simply `std::vector<BacktestResult>` with one entry per
+// requested date, populated by calling `run` once per date (this class
+// deliberately has no "list of dates" concept of its own -- see `run`'s
+// doc comment below) -- no separate collection type is needed, mirroring
+// how DATA-OUT-300's "ordered records for the retained top-N" is just
+// `std::vector<RankedCombo>`, not its own named container. This vector
+// is what OUT-401's not-yet-implemented console formatter will consume.
 struct BacktestResult {
     // The requested sample date, echoed back (YYYY-MM-DD).
     std::string sampleDate;

@@ -29,9 +29,11 @@
 // the persisted ModelArtifact deliberately never retains -- it's an
 // aggregate, not per-draw data) and runs BacktestEngine::run once per
 // requested sample date. Console formatting on both paths is
-// intentionally minimal -- OUT-400/OUT-401's fully human-readable
-// presentation, and DATA-OUT-302's own report-row structure, are
-// separate, not-yet-implemented RTVM items.
+// intentionally minimal -- OUT-400 is done (RankedListPresenter); the
+// backtest path below still prints ad hoc rather than through a
+// dedicated formatter, pending OUT-401 (DATA-OUT-302's report rows,
+// i.e. one `BacktestResult` per requested date, are already the
+// structure OUT-401 will consume -- see BacktestEngine.h).
 int main(int argc, char **argv) {
     const std::vector<std::string> args(argv + 1, argv + argc);
 
