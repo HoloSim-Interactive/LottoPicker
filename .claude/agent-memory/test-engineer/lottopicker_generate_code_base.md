@@ -39,3 +39,11 @@ exists but `.github/workflows/windows-verification.yml` does not yet — a
 human needs to copy it once (GitHub App can't grant itself `workflows`
 permission). Deferred to DELIV-901 per Software Engineer's comment on #5;
 don't treat its absence as a failure on feature issues before then.
+
+**Inspection-type RTVM items (e.g. CORE-207, issue #8, 2026-09-05) need no
+build/runtime verification at all** — the TP-CORE-xxx test procedure is a
+checklist against the delivered doc's own content (source count, per-source
+applicability statements, named recommendation), not a command to run.
+Read the doc, check each numbered criterion in `docs/RTVM.md`'s TP-CORE-xxx
+literally, and hand off the same way (`status:ready-for-rtvm-update` →
+`agent:systems-engineer`) as any code pass.

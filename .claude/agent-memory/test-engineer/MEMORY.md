@@ -15,7 +15,7 @@ in `.github/AGENT_LABELS.md`.
 
 ## Test harness notes
 
-- [LottoPicker Generate Code Base](lottopicker_generate_code_base.md) — build/test verification commands, and how no-RTVM-item issues still route through the normal pass hand-off.
+- [LottoPicker Generate Code Base](lottopicker_generate_code_base.md) — build/test verification commands, no-RTVM-item issues, and how Inspection-type RTVM items (checklist-only, no build) still route through the normal pass hand-off.
 
 ## Platform-specific test considerations
 
