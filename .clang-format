@@ -1,0 +1,9 @@
+# LottoPicker coding standard (docs/SDD.md "Coding Standards").
+# LLVM base style, 100-column limit. Honored by CLion, VS Code, and
+# Visual Studio's built-in ClangFormat integration alike.
+BasedOnStyle: LLVM
+ColumnLimit: 100
+IndentWidth: 4
+AccessModifierOffset: -4
+NamespaceIndentation: None
+SortIncludes: true

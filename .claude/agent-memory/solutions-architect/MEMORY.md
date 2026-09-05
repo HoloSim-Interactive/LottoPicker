@@ -20,3 +20,5 @@ in `.github/AGENT_LABELS.md`.
 ## Open questions log
 
 ## Decisions made
+
+- 2026-09-05 (issue #10): real client CSV doesn't exist yet and has no ETA (SN-4) — see [[real_data_gate_pattern]] for how to handle "cross-check against real CSV" test clauses without stalling the build.

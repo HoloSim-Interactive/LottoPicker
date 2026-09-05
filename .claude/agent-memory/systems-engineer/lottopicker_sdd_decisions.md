@@ -40,3 +40,14 @@ on this project should treat as settled, not reopen from scratch:
   space — applies to CORE-201, CORE-203, CORE-204, DATA-OUT-301 alike.
   If a future feature issue proposes a dense representation, that's a
   regression against this decision, not a new idea.
+- **Model file format bumped v1 -> v2 during CORE-203 (issue #17)**:
+  added `baseline_cooc=<b2>,<b3>,<b4>,<b5>,<b6>` (one chance-expected
+  baseline per group size 2-6), because ranking evaluates `norm_cooc`
+  for unobserved groups too, and per CORE-206 those aren't `0.0` —
+  they're `0.0 - baseline`. A stale v1 file is rejected by
+  `ModelSerializer::read()` and self-heals via the existing
+  rebuild-on-invalid-artifact path (no migration code). If a future
+  requirement needs another persisted scalar, follow this same
+  pattern: bump the version line, let the old format fail closed into
+  a rebuild, don't write a migrator. Documented in `docs/SDD.md`'s
+  Interfaces & File Formats section.

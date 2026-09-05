@@ -15,6 +15,26 @@ in `.github/AGENT_LABELS.md`.
 
 ## Test harness notes
 
+- [LottoPicker Generate Code Base](lottopicker_generate_code_base.md) — build/test verification commands, no-RTVM-item issues, and how Inspection-type RTVM items (checklist-only, no build) still route through the normal pass hand-off.
+- [DATA-IN-100 CsvIngestor](data_in_100_csv_ingestor.md) — verified via standalone harness (no CLI yet); open row-numbering ambiguity in TP-DATA-IN-100 is pre-flagged, not a fail ground.
+- [RTVM ahead of branch on main](rtvm_ahead_of_branch_on_main.md) — docs/RTVM.md edits can land on main mid-issue before the code merges; check main's copy, not just the branch's, before handing off for RTVM update.
+- [Version.h clang-format nit](version_h_clang_format_nit.md) — pre-existing since scaffolding, not caused by any feature branch; don't count against whatever you're testing.
+- [UI-003 backtest flag](ui_003_backtest_flag.md) — CLI-binary-level verification (no CliArgsTest.cpp exists); row-count-only pass on TP-UI-003 step 2 pending CORE-205's real content, re-check when CORE-205 lands.
+- [CORE-202 CompositeScorer pass](core_202_composite_scorer.md) — hand-derived both TP-CORE-202 fixture values independently (not just trusted the code comments); matched exactly.
+- [CORE-204 ModelStore](core_204_model_store.md) — first CLI pipeline wiring; manual 4-run recipe for TP-CORE-204's reused/rebuilt behavior since no shipped fixtures exist yet.
+- [CORE-203 RankingEngine](core_203_ranking_engine.md) — full-pool real runs take ~1min wall-clock, not a hang; open SDD v1/v2 model-format doc flag to recheck at RTVM-update time.
+- [DATA-OUT-300 ranked-list structure](data_out_300_ranked_list_structure.md) — issue #19: "already-shipped" RTVM items can still need a small new dedicated-tag/exact-fixture test, not always a no-diff pass; clang-format path gotcha noted.
+- [OUT-400 RankedListPresenter](out_400_ranked_list_presenter.md) — pure-presentation class, no ranking run needed; verified against a synthetic fixture and a real 3-draw CLI run; re-confirmed clean on the issue #21 post-merge trunk regression pass.
+- [CORE-205 BacktestEngine](core_205_backtest_engine.md) — issue #20: first pass FAIL on real clang-format regression; re-verified PASS after `-i` fix; trunk regression PASS post-merge (83/83), broader clang-format sweep caught collateral damage CI/CD fixed pre-merge.
+- [DATA-OUT-302 backtest report structure](data_out_302_backtest_report_structure.md) — issue #22: PASS, 84/84 (note SE's "85/85" was an off-by-one typo); multi-date `--backtest` CLI runs are slow, use `run_in_background` not a longer inline sleep.
+- [OUT-401 BacktestReportPresenter](out_401_backtest_report_presenter.md) — issue #23: PASS, 88/88, 776 assertions; per-date BacktestError correctly excluded from report rows, not faked; trunk regression re-confirmed clean at main@46342d6.
+- [NFR-500 offline-operation inspection](lottopicker_generate_code_base.md) — issue #24: PASS, no branch (inspection-only, no code change); reusable 3-part grep/include/CMake recipe for network-call inspection items.
+- [DELIV-900 run documentation](deliv_900_run_documentation.md) — issue #25: PASS, clean-clone build+run reproduced README's sample output byte-for-byte; clang-format doesn't apply to `.cfg` fixtures.
+
+## Process notes
+
+- Usage-window parking (`status:needs-human` → auto-resume): when resumed, check whether your last comment already posted before the session died — often only the label hand-off failed. Verify current repo state still matches what that comment reported (same SHA, clean tree) rather than re-running the full test pass, then just re-issue the stalled hand-off labels. Seen on issue #19 (DATA-OUT-300 regression pass).
+
 ## Platform-specific test considerations
 
 ## Recurring failure patterns
