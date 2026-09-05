@@ -15,8 +15,12 @@ in `.github/AGENT_LABELS.md`.
 
 ## RTVM conventions
 
+- [LottoPicker RTVM ID scheme](rtvm_id_scheme_lottopicker.md) — category prefixes/ranges and the 19 items populated 2026-09-05; console-only MVP output is deliberate, not an oversight.
+
 ## Cross-product interface standards
 
 ## Requirements patterns and traps
+
+- [Lock-acquire pull resolves a stale-looking doc](lock_pull_resolves_stale_read.md) — before rewriting a shared doc that looks out of sync with another role's claim, pull (lock-acquire does this) and re-read before assuming the edit was lost.
 
 ## Documentation index
