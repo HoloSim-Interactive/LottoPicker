@@ -5,6 +5,7 @@
 add_executable(lottopicker_tests
     SmokeTest.cpp
     BacktestEngineTest.cpp
+    BacktestReportPresenterTest.cpp
     CompositeScorerTest.cpp
     CooccurrenceScorerTest.cpp
     ConfigTest.cpp

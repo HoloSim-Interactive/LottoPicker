@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "lottopicker/BacktestEngine.h"
+#include "lottopicker/BacktestReportPresenter.h"
 #include "lottopicker/CliArgs.h"
 #include "lottopicker/Config.h"
 #include "lottopicker/CsvIngestor.h"
@@ -28,12 +29,13 @@
 // re-era-tags the same data_file into row-level DrawRecords (something
 // the persisted ModelArtifact deliberately never retains -- it's an
 // aggregate, not per-draw data) and runs BacktestEngine::run once per
-// requested sample date. Console formatting on both paths is
-// intentionally minimal -- OUT-400 is done (RankedListPresenter); the
-// backtest path below still prints ad hoc rather than through a
-// dedicated formatter, pending OUT-401 (DATA-OUT-302's report rows,
-// i.e. one `BacktestResult` per requested date, are already the
-// structure OUT-401 will consume -- see BacktestEngine.h).
+// requested sample date. Console formatting on both paths now goes
+// through a dedicated presenter (OUT-400's RankedListPresenter,
+// OUT-401's BacktestReportPresenter) rather than ad hoc printing.
+// A sample date that throws BacktestError (e.g. no draw recorded on
+// it) is reported inline as it's encountered, immediately below the
+// backtest-mode banner -- it never becomes a DATA-OUT-302 report row,
+// so it's not part of the vector<BacktestResult> the presenter prints.
 int main(int argc, char **argv) {
     const std::vector<std::string> args(argv + 1, argv + argc);
 
@@ -77,29 +79,21 @@ int main(int argc, char **argv) {
             std::vector<lottopicker::DrawRecord> history = backtestIngest.records;
             lottopicker::EraTagger::tag(history);
 
+            std::vector<lottopicker::BacktestResult> report;
+            report.reserve(cliArgs.backtestDates.size());
             for (const std::string &date : cliArgs.backtestDates) {
                 try {
-                    const lottopicker::BacktestResult result =
-                        lottopicker::BacktestEngine::run(history, date, config.topN);
-                    std::cout << "  " << date << ": ";
-                    if (result.found) {
-                        std::cout << "rank " << result.rank << "/" << result.topN << " ("
-                                  << result.percentile << " percentile)";
-                    } else {
-                        std::cout << "not found in top-N";
-                    }
-                    std::cout << " | containment(3/4/5/6 of 6):";
-                    for (int count : result.observedContainment) {
-                        std::cout << " " << count;
-                    }
-                    std::cout << "\n";
+                    report.push_back(lottopicker::BacktestEngine::run(history, date, config.topN));
                 } catch (const lottopicker::BacktestError &e) {
                     // One bad sample date (e.g. no draw recorded on it)
                     // does not abort the rest of the requested dates
-                    // (UI-003's list is otherwise independent per date).
+                    // (UI-003's list is otherwise independent per date);
+                    // it's reported here rather than as a DATA-OUT-302
+                    // report row, since there's no BacktestResult to add.
                     std::cout << "  " << date << ": " << e.what() << "\n";
                 }
             }
+            lottopicker::BacktestReportPresenter::print(std::cout, report);
         } else {
             // Normal ranking path (CORE-203): score the full combination
             // space against the model just loaded/built above, retaining
