@@ -28,3 +28,12 @@ recording an already-clean TE regression pass came back on
 `status:ready-for-commit`/`agent:cicd` even though `issue-14` (e5287b3)
 was already a confirmed ancestor of `main` from the original merge.
 Same handling applies — no re-merge, no re-tag, no new status label.
+
+Confirmed a 3rd time on issue #15 (CORE-202, 2026-09-05): same shape —
+original merge 6117db2/v1.0.138, TE regression pass at 5b1a954, SE's
+RTVM note (fdf4264) came back on `status:ready-for-commit`/`agent:cicd`.
+`issue-15` confirmed ancestor of `main` via `git merge-base
+--is-ancestor` (after unshallowing). No re-merge/re-tag; note in your
+comment that this is trunk regression and hand back to
+`agent:systems-engineer` with `status:ready-for-rtvm-update` (not
+`status:ready-for-commit` — see [[next-line-must-match-labels-applied]]).
