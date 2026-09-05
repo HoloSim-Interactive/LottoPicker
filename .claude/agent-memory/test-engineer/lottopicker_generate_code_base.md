@@ -107,3 +107,12 @@ TP language like this, citing the test name in the pass comment is
 enough; no need to hand-verify the arithmetic by hand unless the SDD
 formula itself is in question. Also checked `clang-format --dry-run
 -Werror` on the three new/changed files as SWE claimed — clean.
+
+**CORE-200 regression pass on trunk, same issue #11, second hand-off
+(2026-09-05):** after CI/CD merged `issue-11` into `main` at 5e7f0fc
+(three reset-and-redo cycles against concurrent #10/#12 activity,
+resolved mechanically) and Systems Engineer recorded the SHA + Verified
+status in RTVM, routed back for regression. Fast-path confirmed again:
+`git checkout main && git pull`, RTVM row's SHA matched, clean rebuild
+(`rm -rf build`), 23/23 ctest pass (16 prior + CORE-201's additions all
+present together). No new harness needed.
