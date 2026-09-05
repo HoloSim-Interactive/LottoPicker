@@ -63,3 +63,10 @@ branch doesn't otherwise touch *always* auto-resolves in git's favor
 of main, regardless of how stale the branch's copy is. Only worry if
 the branch itself also edits `docs/RTVM.md` (e.g. adding a Commit SHA
 note) — that's the case that would produce a real conflict.
+
+**Recurred a 6th time on issue #21 (OUT-400, 2026-09-05):** SE
+committed the Verified status straight to `main` (`42fce49`) before
+CI/CD had merged `issue-21` at all — same premature shape as issue #7.
+Merge (`6cd0bfc`) was still clean and first-push-succeeded: `issue-21`
+never touched `docs/RTVM.md`. No release cut this time either
+(several RTVM items still Approved).
