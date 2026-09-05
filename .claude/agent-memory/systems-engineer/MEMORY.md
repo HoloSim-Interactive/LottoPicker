@@ -16,6 +16,7 @@ in `.github/AGENT_LABELS.md`.
 ## RTVM conventions
 
 - [LottoPicker RTVM ID scheme](rtvm_id_scheme_lottopicker.md) — category prefixes/ranges and the 19 items populated 2026-09-05; console-only MVP output is deliberate, not an oversight.
+- [LottoPicker Implementation Plan](lottopicker_implementation_plan.md) — issues #5-#26 map to RTVM IDs; full dependency graph/rationale, check before touching any feature issue's dependencies.
 
 ## Cross-product interface standards
 
