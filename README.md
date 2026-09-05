@@ -1,60 +1,57 @@
-# =TEMPLATE=
+# LottoPicker
 
-A template for building a semi-automated team of software engineering
-AI agents — a Product Manager, a Solutions Architect, a Systems
-Engineer, a Software Engineer, a Test Engineer, and CI/CD — using
-GitHub as the distributor for the agents, handling communication via
-Issue messages. No long-running process is required: every hand-off
-is a fresh, ephemeral Claude Code session, triggered by a label
-change, that reads the issue thread, does its work, and hands off to
-the next role.
+A single-process, offline C++ CLI tool that ranks number combinations
+for Florida Lotto (6-of-`n`) using historical draw data, and backtests
+that ranking against past draws. See `docs/PROJECT_DEFINITION.md` for
+the full scope and `docs/SDD.md` for the architecture.
 
-## Where to begin
+> **Status:** scaffolding only (Generate Code Base). The sections below
+> are filled in for real by `DELIV-900` once a working end-to-end
+> example exists — see `docs/RTVM.md` for that item's status.
 
-Starting a brand-new project from this template:
+## Build from a clean clone
 
-- **Create a New Repo** - Duplicate this repo and give it a logical name based on the Subject_Goals of the project.
-- **Fill in Kickoff Runbook** - **[`KICKOFF_RUNBOOK.md`](./KICKOFF_RUNBOOK.md)** — the fill-in-the-blanks
-questionnaire and step-by-step setup instructions. Start there, not
-here.
+Requires CMake 3.21+ and a C++17 compiler (GCC, Clang, or MSVC 2022).
 
-## Where to go next — the project documents, in the order they're actually produced
+```sh
+cmake --preset default
+cmake --build --preset default
+ctest --preset default
+```
 
-Once a project is underway, these are the artifacts each role owns,
-listed in the order the pipeline creates them — not the order they
-happen to sit in alphabetically:
+On Windows, open the folder directly in Visual Studio 2022 (File → Open
+→ Folder — VS's built-in CMake integration auto-detects
+`CMakeLists.txt` and the `windows-vs2022` preset), or run:
 
-1. **[`docs/PROJECT_DEFINITION.md`](docs/PROJECT_DEFINITION.md)** —
-   owned by **Product Manager**. Scope, stakeholder needs, and the MVP
-   definition, gathered through the kickoff interview. Everything
-   downstream traces back to this.
-2. **[`docs/RTVM.md`](docs/RTVM.md)** — owned by **Systems Engineer**.
-   The Requirements Traceability & Verification Matrix: every
-   requirement broken into testable line items, each traced to a
-   stakeholder need.
-3. **[`docs/SDD.md`](docs/SDD.md)** — owned by **Systems Engineer**.
-   The Software Design Document: system architecture, coding
-   standards, and build/toolchain conventions. Comes *before* the
-   implementation plan below, not after — you need the architectural
-   decomposition before you can sensibly sequence a build around it.
-4. **[`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md)** —
-   owned by **Systems Engineer**, with Solutions Architect and Product
-   Manager. Build sequencing, most-critical-first, and the dependency
-   graph between features. This is also the step that actually
-   creates every individual feature issue, dependency-gated where
-   needed.
+```sh
+cmake --preset windows-vs2022
+cmake --build --preset windows-vs2022
+```
 
-**Reference, not sequential** — consult as needed, not part of the
-linear flow above:
+## Config file format
 
-- **[`docs/LOCKING.md`](docs/LOCKING.md)** — the symbolic file-locking
-  convention agents use when editing shared documents or binary
-  assets concurrently.
+*TODO (DELIV-900): one complete worked example here once
+`examples/sample_history.csv` exists, per `docs/SDD.md`'s `UI-002`
+format (`data_file=...`, `top_n=...`).*
 
-## Where the rules live
+## Launch command
 
-**[`.github/AGENT_LABELS.md`](.github/AGENT_LABELS.md)** — the full
-label convention, the escalation ladder, the complete issue-type
-reference, and the branch and comment-structure conventions every role
-follows. This is the source of truth if something in the pipeline's
-behavior doesn't match what you expected.
+*TODO (DELIV-900): the exact invocation against the sample config,
+covering both the ranking run and a `--backtest` run, per
+`docs/SDD.md`'s `UI-003` CLI contract.*
+
+## Sample output
+
+*TODO (DELIV-900): a literal example of correct console output for
+both run modes (`OUT-400`, `OUT-401`).*
+
+## Project documents
+
+- [`docs/PROJECT_DEFINITION.md`](docs/PROJECT_DEFINITION.md) — scope,
+  stakeholder needs, MVP definition.
+- [`docs/RTVM.md`](docs/RTVM.md) — requirements traceability &
+  verification matrix.
+- [`docs/SDD.md`](docs/SDD.md) — architecture, coding standards, build
+  & toolchain conventions.
+- [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md) — build
+  sequencing.
