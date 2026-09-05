@@ -22,5 +22,8 @@ in `.github/AGENT_LABELS.md`.
 ## Requirements patterns and traps
 
 - [Lock-acquire pull resolves a stale-looking doc](lock_pull_resolves_stale_read.md) — before rewriting a shared doc that looks out of sync with another role's claim, pull (lock-acquire does this) and re-read before assuming the edit was lost.
+- [Genuine research via public APIs](genuine_research_via_public_apis.md) — Crossref/GitHub-search/Wikipedia REST calls for real, checkable sources when a stakeholder need demands actual comparative research, not restated client description.
 
 ## Documentation index
+
+- [LottoPicker SDD decisions](lottopicker_sdd_decisions.md) — CORE-206 normalization method, unconfirmed FL rule-change date, CORE-207 summary location, UI-003 CLI flag, target-platform strategy, sparse-model decision. Check before revisiting these RTVM items.
