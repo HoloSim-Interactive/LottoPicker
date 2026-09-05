@@ -24,6 +24,7 @@ in `.github/AGENT_LABELS.md`.
 - [DATA-IN-101 era tagging](data_in_101_era_tagging.md) — EraTable/EraTagger design (issue #10) and the missing-real-CSV gap escalated to Systems Engineer.
 - [UI-003 backtest flag parsing](ui_003_backtest_flag_parsing.md) — CliArgs --backtest parsing (issue #13), duplicated-vs-shared date-validation call, and the main.cpp placeholder stub since ingestion isn't wired into main() yet.
 - [CORE-206 PoolSizeNormalizer](core_206_pool_size_normalizer.md) — normalization via raw-score-minus-per-group-size-baseline shortcut (issue #14), and the kDefaultHalfLifeDraws duplication that became a real compile error and got consolidated.
+- [CORE-202 CompositeScorer](core_202_composite_scorer.md) — linear-combination composite score (issue #15), a nested-struct-default-argument C++ gotcha, and the weight-exposure-vs-Config scope call.
 
 ## Platform-specific notes
 
