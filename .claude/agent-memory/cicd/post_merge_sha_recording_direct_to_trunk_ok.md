@@ -27,3 +27,10 @@ the intended fast path and needs no comment. If a future edit records
 a SHA CI/CD hasn't reported yet, or changes something beyond the
 Commit(s) column pre-merge, that's the real violation worth flagging
 again.
+
+Confirmed again on issue #7's second `ready-for-commit` hand-off
+(`650481f`, recording Test Engineer's trunk-regression pass against
+the already-reported `f744a86`): correctly nothing to merge —
+`git merge-base --is-ancestor origin/issue-7 origin/main` true, no new
+tag. A `ready-for-commit` hand-off doesn't always mean CI/CD has work
+to do; sometimes it's just confirming an already-complete chain.
