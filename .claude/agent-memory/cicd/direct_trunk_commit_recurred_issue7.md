@@ -70,3 +70,15 @@ CI/CD had merged `issue-21` at all — same premature shape as issue #7.
 Merge (`6cd0bfc`) was still clean and first-push-succeeded: `issue-21`
 never touched `docs/RTVM.md`. No release cut this time either
 (several RTVM items still Approved).
+
+**Recurred a 7th time on issue #23 (OUT-401, 2026-09-05):** SE
+committed the Verified status straight to `main` (`b260fce`) with
+commit column "pending merge", before CI/CD had merged `issue-23` at
+all. Merge (`8ed9543`) was still clean, first-push-succeeded, no
+race: `issue-23` never touched `docs/RTVM.md`. Tagged v1.0.213, no
+release cut (NFR-500/DELIV-900/DELIV-901 still Approved). Pattern is
+now consistent enough across 7 issues to treat as this project's
+normal workflow rather than a recurring anomaly worth re-flagging
+every time — still worth noting in the memory record, but no longer
+needs its own callout line in the hand-off comment unless the branch
+itself also touches RTVM.md.
