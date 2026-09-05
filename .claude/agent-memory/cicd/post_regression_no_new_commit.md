@@ -44,3 +44,10 @@ landed directly on trunk (e5a7fcf), `issue-16` confirmed ancestor of
 `main`. Same handling; comment brevity rules now apply too (see the
 "Comment brevity" note in cicd.md) — kept the hand-back to a few
 sentences instead of the fuller writeups used on #13-#15.
+
+Confirmed a 5th time on issue #17 (CORE-203, 2026-09-05): original
+merge 890ce24/v1.0.161, TE regression pass + SE's RTVM notes landed
+directly on trunk (f04b68a, 2853452), `issue-17` confirmed ancestor of
+`main` via `git merge-base --is-ancestor` after unshallowing. Same
+handling; brief hand-back to `agent:systems-engineer` with
+`status:ready-for-rtvm-update`.
