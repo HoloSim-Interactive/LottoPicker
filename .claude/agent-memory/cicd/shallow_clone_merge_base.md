@@ -24,3 +24,15 @@ empty right before a trunk merge, check
 `git fetch --unshallow origin` and re-check before concluding
 anything about the branch relationship. Don't escalate or force a
 merge based on a shallow view.
+
+**Recurred on issue #14 (CORE-206) merging 2026-09-05**: this time it
+showed up as `git merge --no-ff` outright refusing with "fatal:
+refusing to merge unrelated histories" (not just an empty
+`merge-base`) after a routine `git pull origin main` fast-forward —
+the checkout was shallow from the start of the session, unrelated to
+that pull. `git fetch --unshallow origin` immediately fixed it and the
+merge proceeded normally (one real conflict after that, see
+[[concurrent_trunk_merge_race]]). Treat "unrelated histories" on a
+feature branch that Systems/Test Engineer have been actively working
+off of main as this same shallow-clone artifact, not a real divergence
+— check shallow-ness before treating it as a genuine history problem.
