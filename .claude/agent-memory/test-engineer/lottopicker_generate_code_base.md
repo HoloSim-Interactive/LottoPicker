@@ -159,3 +159,12 @@ main), routed back for regression. `main` @ 36e030a, clean rebuild,
 42/42 ctest pass (unchanged count — no other concurrent work landed
 between the original pass and this regression check). Straightforward
 fast-path case, no surprises.
+
+**CORE-202 regression pass on trunk, same issue #15, second hand-off
+(2026-09-05):** after CI/CD merged `issue-15` to `main` at 6117db2
+(tag v1.0.138, tag-only, no release cut since CORE-203/204/205 still
+Approved/In Test) and SE recorded SHA + Verified in RTVM (ed9b14b),
+routed back for regression. `main` @ 5b1a954, clean rebuild, 47/47
+ctest pass (unchanged count). Confirms tag-only merges (no full-table
+release) still go through the same regression fast path as any other
+trunk merge.
