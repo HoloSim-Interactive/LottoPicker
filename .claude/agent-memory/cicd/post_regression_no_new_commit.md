@@ -51,3 +51,11 @@ directly on trunk (f04b68a, 2853452), `issue-17` confirmed ancestor of
 `main` via `git merge-base --is-ancestor` after unshallowing. Same
 handling; brief hand-back to `agent:systems-engineer` with
 `status:ready-for-rtvm-update`.
+
+Confirmed a 6th time on issue #19 (DATA-OUT-300, 2026-09-05): original
+merge 3d23a0c/v1.0.171, an in-between usage-window pause/auto-resume
+happened but produced no rework (TE just re-confirmed and re-posted
+its already-done regression result), then SE's RTVM notes landed
+directly on trunk (ddcd2fa, a8694ae). `issue-19` confirmed ancestor of
+`main`. Same handling; brief hand-back to `agent:systems-engineer` with
+`status:ready-for-rtvm-update`.
