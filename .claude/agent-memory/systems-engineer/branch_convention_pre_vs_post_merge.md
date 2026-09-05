@@ -31,3 +31,12 @@ activity on `[RTVM-014]`-style issues does.
 
 See [LottoPicker Implementation Plan](lottopicker_implementation_plan.md)
 for the issue numbering this applies to.
+
+Confirmed correct on issue #8's second round (2026-09-05, post CI/CD
+regression-merge cycle): CORE-207's RTVM row was already accurate
+(Verified, SHA recorded) when Test Engineer's regression pass came
+back via `status:ready-for-rtvm-update`. No edit to `docs/RTVM.md` was
+needed or made this round — but the fast path (per `.github/AGENT_LABELS.md`)
+still routes to `agent:cicd` with `status:ready-for-commit` regardless
+of whether anything actually changed. Don't skip the CI/CD hand-off
+just because the RTVM row didn't need editing.
