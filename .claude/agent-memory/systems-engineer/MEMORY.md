@@ -28,6 +28,7 @@ in `.github/AGENT_LABELS.md`.
 - [Branch convention: pre- vs post-merge](branch_convention_pre_vs_post_merge.md) — issue-<N> branch is for pre-merge collaboration; once CI/CD reports a merge SHA, editing main directly for the RTVM SHA/status update is correct, not a repeat of the direct-to-trunk flag.
 - [DATA-IN-101 missing real CSV](data_in_101_missing_real_csv.md) — resolved: SA ruled Verified gate is part 1 only, part 2 deferred to DELIV-900; reuse this pattern directly if a test clause ever depends on a client-controlled artifact with no ETA.
 - [RTVM fast-path: reconcile against main](rtvm_fast_path_reconcile_against_main.md) — if Test Engineer flags main is ahead of the feature branch's RTVM copy, edit main directly, not the stale branch copy.
+- [CI/CD "no new commit" after regression](cicd_no_new_commit_after_regression.md) — if CI/CD's post-regression comment says nothing new merged, just append the regression note to the existing RTVM status/commit entry and close, don't wait for a fresh SHA.
 
 ## Documentation index
 
