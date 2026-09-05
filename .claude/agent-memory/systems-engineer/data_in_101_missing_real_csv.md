@@ -1,6 +1,6 @@
 ---
 name: data-in-101-missing-real-csv
-description: DATA-IN-101 (issue #10) escalated — real client Florida Lotto CSV doesn't exist in the pipeline yet, so TP-DATA-IN-101 part 2 can't run
+description: DATA-IN-101 (issue #10) — real CSV missing, SA ruled Verified gate is part 1 only, part 2 deferred to DELIV-900; reusable pattern for client-artifact-gated test clauses
 metadata:
   type: project
 ---
@@ -38,3 +38,21 @@ has actually landed before assuming Software Engineer can just look
 harder for it — it may genuinely not exist yet. Same logic would apply
 to CORE-206 normalization behavior validation if that ever wants real
 multi-era data too.
+
+**Resolution (Solutions Architect ruling, 2026-09-05, issue #10):**
+DATA-IN-101 reaches Verified on part 1 (synthetic-fixture era-tagging
+mechanism) alone — a real-data cross-check clause was a design-time
+sequencing mistake (assumed the CSV would exist by implementation
+time), not a defect, and RTVM's own philosophy is synthetic/
+deterministic fixtures precisely so verification doesn't depend on
+real data's arrival. I updated `docs/RTVM.md`: dropped the "before
+Verified" gate from TP-DATA-IN-101 part 2, reworded it as a **deferred
+pre-delivery check** tracked alongside DELIV-900 (confirm/correct the
+era boundary against the real CSV once the client supplies it, before
+final MVP sign-off), and handed part 1 to Test Engineer normally.
+**General pattern to reuse:** if a test procedure's "before Verified"
+clause turns out to depend on an artifact the client controls the
+timing of with no ETA, that clause almost certainly belongs decoupled
+from Verified and reframed as a deferred pre-delivery/DELIV-900-style
+check instead of blocking the feature — don't re-escalate to SA for
+the same shape of problem next time; apply this directly.

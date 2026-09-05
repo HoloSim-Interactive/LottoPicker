@@ -26,7 +26,7 @@ in `.github/AGENT_LABELS.md`.
 - [Lock-acquire pull resolves a stale-looking doc](lock_pull_resolves_stale_read.md) — before rewriting a shared doc that looks out of sync with another role's claim, pull (lock-acquire does this) and re-read before assuming the edit was lost.
 - [Genuine research via public APIs](genuine_research_via_public_apis.md) — Crossref/GitHub-search/Wikipedia REST calls for real, checkable sources when a stakeholder need demands actual comparative research, not restated client description.
 - [Branch convention: pre- vs post-merge](branch_convention_pre_vs_post_merge.md) — issue-<N> branch is for pre-merge collaboration; once CI/CD reports a merge SHA, editing main directly for the RTVM SHA/status update is correct, not a repeat of the direct-to-trunk flag.
-- [DATA-IN-101 missing real CSV](data_in_101_missing_real_csv.md) — real client Florida Lotto history was never delivered to the repo; TP-DATA-IN-101 part 2 blocked on that, not a code issue — escalated to SA on issue #10.
+- [DATA-IN-101 missing real CSV](data_in_101_missing_real_csv.md) — resolved: SA ruled Verified gate is part 1 only, part 2 deferred to DELIV-900; reuse this pattern directly if a test clause ever depends on a client-controlled artifact with no ETA.
 
 ## Documentation index
 
