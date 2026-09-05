@@ -38,3 +38,4 @@ in `.github/AGENT_LABELS.md`.
 ## Documentation index
 
 - [LottoPicker SDD decisions](lottopicker_sdd_decisions.md) — CORE-206 normalization method, unconfirmed FL rule-change date, CORE-207 summary location, UI-003 CLI flag, target-platform strategy, sparse-model decision, model-file v1→v2 versioning pattern (CORE-203). Check before revisiting these RTVM items.
+- [VS-generator version pinning + CI gotchas](vs_generator_version_pinning_and_ci_gotchas.md) — DELIV-901: a CMake VS-generator name is pinned to one release; keep multiple presets + try-newest-first detection, not a single hardcoded version. Also a PowerShell here-string indentation gotcha.
