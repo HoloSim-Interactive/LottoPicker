@@ -66,3 +66,16 @@ reported by CI/CD on this issue" to "SHA already exists on trunk from
 a prior issue, nothing this cycle needed to commit." Same handling:
 no merge, no tag, hand off to `agent:systems-engineer` with no new
 status label.
+
+Confirmed a sixth time on issue #24 (NFR-500, 2026-09-05) — a pure
+Inspection item with no `issue-24` branch ever created at all (not
+even a memory-notes-only one, unlike #8/#11/#18). SE committed the
+Verified status straight to `main` (`f217b45`) before handing off
+`status:ready-for-commit`, then a follow-up memory-only commit
+(`6d8853b`) landed after. Nothing for CI/CD to merge or tag. Checked
+the full RTVM table anyway (DELIV-900/901 still Approved, so no
+release regardless). First mid-task correction of my own hand-off
+comment: I initially wrote `Next: status:ready-for-rtvm-update` out of
+habit before catching that the no-new-work pattern calls for no status
+label at all — posted a correcting follow-up comment rather than
+leaving the wrong Next line for stall-recovery to parse.
