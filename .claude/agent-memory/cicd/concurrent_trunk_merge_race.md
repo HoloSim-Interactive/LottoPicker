@@ -55,6 +55,21 @@ conflict, same keep-both resolution. Rebuilt full suite after every
 redo; only the final one mattered (23/23, combining both features'
 tests) since nothing was pushed until then.
 
+**Worst case so far: issue #9 (UI-002) merging 2026-09-05 took 7
+reset-and-redo cycles** against #10/#11/#12 all landing doc/memory
+commits concurrently (never a new source merge after the first
+CORE-200 one, but the doc/memory churn alone kept re-triggering
+rejections). The conflicting hunks were byte-identical every single
+cycle (same `src/CMakeLists.txt`/`tests/CMakeLists.txt` source-list
+conflict, same two memory-file conflicts) once the source-side base
+had stabilized — after the 2nd redo it was faster to keep a known-good
+resolution (a heredoc `cat >` rewrite of the two CMakeLists files, a
+small Python regex substitution for the two memory files) ready to
+reapply than to re-derive it from the diff each time. Don't mistake a
+long streak of doc-only rejections for something wrong with the merge
+itself — keep resetting and redoing exactly the same way; it terminates
+once the doc/memory-commit burst quiets down.
+
 **Confirmed a 5th time on issue #10 (DATA-IN-101) merging 2026-09-05**:
 first merge attempt (against a stale local `main` one commit behind
 origin) hit the usual `src/CMakeLists.txt`/`tests/CMakeLists.txt`/

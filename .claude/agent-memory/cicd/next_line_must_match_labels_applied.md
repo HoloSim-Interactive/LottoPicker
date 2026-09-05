@@ -29,3 +29,12 @@ already posted wrong, `gh api -X PATCH
 repos/.../issues/comments/<numeric id>` to fix it (the numeric REST id,
 not the GraphQL node id from `gh issue view ... -q '.comments[].id'`)
 before applying labels, so the record and the mechanics agree.
+
+**Recurred on issue #9 (UI-002), 2026-09-05:** drafted
+`status:ready-for-test, agent:systems-engineer` again on the first
+draft (muscle memory from routine test-engineer hand-offs), caught it
+before finishing the label steps, corrected the label to
+`status:ready-for-rtvm-update` and PATCHed the already-posted comment
+before applying labels. Worth double-checking this specific line every
+time on a trunk-merge comment, since the wrong instinct keeps
+recurring — it's not a one-off lapse.
