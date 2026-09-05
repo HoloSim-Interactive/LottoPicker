@@ -38,3 +38,16 @@ hand-off comment so Systems Engineer can correct the SHA-timing
 question in their own memory (the rule needs to be "after CI/CD's
 merge *for this issue* has actually landed," not "after Test Engineer's
 pass" or "after posting ready-for-commit").
+
+**Recurred a 4th time on issue #12 (CORE-201, 2026-09-05):** SE's own
+memory (`systems-engineer/branch_convention_pre_vs_post_merge.md`,
+confirmed the same day on issue #11/CORE-200) states pre-merge RTVM
+edits should land on the *issue branch* with status text "In Test
+(...pending CI/CD merge)". On issue #12, SE instead committed straight
+to `main` (`f674e3b`) with status **"Verified"** outright, before
+CI/CD had merged anything — the exact case that memory was meant to
+prevent, contradicted within the same run it was written. Still
+harmless: `issue-12` never touched `docs/RTVM.md`, merge was clean.
+Keep flagging plainly each time rather than silently tolerating it —
+four occurrences in one project suggests it isn't self-correcting from
+hand-off comments alone.
