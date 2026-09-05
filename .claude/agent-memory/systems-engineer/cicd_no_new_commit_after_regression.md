@@ -28,3 +28,11 @@ merged, no diff" after a regression pass, don't treat it as a fresh
 commit-confirmation requiring a new hand-off cycle — update the RTVM
 status text to note the regression pass alongside the existing
 commit/tag, comment, and close the issue directly.
+
+**Inspection-only variant (issue #24, NFR-500):** when the RTVM item
+is Inspection (no code change at all), the "commit" is the RTVM-edit
+commit itself, not a feature commit. CI/CD's comment confirming "no
+diff pending on main" is the same signal — just close. Keep the
+Commit(s) column holding the actual SHA and the Status column holding
+the narrative, matching how CORE-207 (#8) was recorded, rather than
+inverting the two.
