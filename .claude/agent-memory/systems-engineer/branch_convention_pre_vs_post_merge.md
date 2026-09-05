@@ -56,3 +56,13 @@ pending" to name that SHA, pushed direct to `main`, then handed off
 `status:ready-for-commit` → `agent:cicd` per the fast path even though
 CI/CD will likely find nothing new to merge (as it didn't on #7) —
 that's expected and not an error, it's how this chain formally closes.
+
+Confirmed the *other* branch (first-ever `status:ready-for-rtvm-update`
+on a feature, before any CI/CD merge) on issue #11 (CORE-200,
+2026-09-05): Test Engineer's pass was the first report for this issue
+— CI/CD had not yet reported a merge SHA — so the RTVM status edit
+went to `issue-11` (which already existed, created by Software
+Engineer), not `main`. Set status text to "In Test (... pending CI/CD
+merge)" rather than "Verified", since Verified is reserved for after
+CI/CD's commit-confirmation step per the Status vocabulary. Then still
+handed off `status:ready-for-commit` → `agent:cicd` per the fast path.
