@@ -15,16 +15,13 @@ in `.github/AGENT_LABELS.md`.
 
 ## Understanding of the product
 
-- [Client context](client_context.md) — Kyle/HoloSim, C++ CLI Florida Lotto statistics tool, cheap budget, no user docs needed.
+- [Client context](client_context.md) — Kyle/HoloSim, C++ CLI Florida Lotto statistics tool; "cheap" applies to build/infra, NOT to research depth (client reversed PM's initial read); wants minimal run docs.
 
 ## Client / stakeholder context
 
 - See [client_context.md](client_context.md).
 
-## Open questions log
-
-- [Scope decisions & open questions](scope_decisions.md) — 5 open questions sent to client on issue #1 (2026-09-05): game scope, data source, historical rule changes, output size, target OS.
-
 ## Decisions made
 
-- 2026-09-05: MVP = Florida Lotto only, single composite algorithm (client's described approach, not comparative research), backtest is a first-class feature. See [scope_decisions.md](scope_decisions.md).
+- 2026-09-05: Scope fully confirmed, all 5 kickoff questions answered — see [scope_decisions.md](scope_decisions.md) for the resolutions (game scope, data source, pool-size normalization flagged as open algorithmic question, top-N output pipeline, Visual-Studio-openable deliverable requirement).
+- 2026-09-05: PROJECT_DEFINITION.md fully [CONFIRMED], handed to Systems Engineer via new "RTVM" issue.

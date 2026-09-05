@@ -19,7 +19,20 @@ comparative research, and toward simple/free tooling over heavier
 infrastructure (e.g. a client-provided data file over building a
 scraper, unless he says otherwise).
 
-User documentation: confirmed NOT needed (Kickoff Runbook, answered
-directly by client before the interview even started). Don't re-ask
-this one — it's already settled, unlike most projects where PM must
-raise it proactively.
+User documentation: client's Kickoff Runbook answer ("No") turned out to
+mean "no full user manual," not "nothing at all" — when the PM interview
+reached output/config details (2026-09-05), Kyle clarified he does want
+minimal run instructions (build from clone, config file format + one
+working example, launch command, expected output). Lesson: a quick
+"no docs needed" answer given before the client has seen what the config
+file / CLI invocation will actually look like may not survive contact
+with those details — worth a light re-check once the shape of the
+config/CLI is concrete, rather than treating the very first answer as
+permanently settled.
+
+Client also reversed the PM's "keep it cheap → skip comparative research"
+proposal explicitly: he wants real comparative research (published
+strategies, papers, open-source repos) as the actual point of the
+exercise — "cheap" applies to build/infra choices (e.g. accepting a
+client-supplied CSV instead of building a scraper), not to research
+depth. See [[scope_decisions]].
