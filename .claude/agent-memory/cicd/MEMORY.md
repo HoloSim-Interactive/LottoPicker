@@ -30,7 +30,7 @@ in `.github/AGENT_LABELS.md`.
 - [Next line must match labels applied](next_line_must_match_labels_applied.md) — after a trunk merge, hand back to SE with `status:ready-for-rtvm-update`, not the `status:ready-for-commit` I inherited.
 
 - [Inspection-item direct-trunk commit](inspection_item_direct_trunk_commit.md) — on CORE-207/issue #8, Systems Engineer committed the RTVM status change straight to main instead of via CI/CD; check both directions of the diff before assuming the branch has the work.
-- [Direct-trunk commit recurred on issue #7](direct_trunk_commit_recurred_issue7.md) — recurred again on issue #12 (4th time); keep flagging each occurrence even though harmless so far.
+- [Direct-trunk commit recurred on issue #7](direct_trunk_commit_recurred_issue7.md) — recurred on issue #12 (4th) and issue #19 (5th); always auto-resolves clean if branch doesn't itself touch RTVM.md.
 - [Post-merge SHA recording direct-to-trunk is OK](post_merge_sha_recording_direct_to_trunk_ok.md) — 3rd direct-trunk edit on issue #8 was SE correctly recording an *already-reported* merge SHA, not a repeat violation; only flag if the SHA predates CI/CD's report or the edit does more than that.
 - [Merge commit message inconsistency](merge_commit_message_inconsistency.md) — most trunk merges (incl. mine, issue #13/e020769) skip the required Summary/Source/Testing body; write it into the merge `-m` up front, since a bare title can't be fixed after push without a forbidden force-push.
 - [Post-regression no-new-commit](post_regression_no_new_commit.md) — TE's regression pass can land back on `agent:cicd`/`status:ready-for-commit` with nothing new to merge (issue #13); confirm no diff vs main, then hand back with no new status label.

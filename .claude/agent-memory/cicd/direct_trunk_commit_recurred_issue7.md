@@ -51,3 +51,15 @@ harmless: `issue-12` never touched `docs/RTVM.md`, merge was clean.
 Keep flagging plainly each time rather than silently tolerating it —
 four occurrences in one project suggests it isn't self-correcting from
 hand-off comments alone.
+
+**Recurred a 5th time on issue #19 (DATA-OUT-300, 2026-09-05):** SE
+committed the Verified status straight to `main` (6ac2b1b) while
+`issue-19` was still open with a stale ("Approved") `docs/RTVM.md`.
+Merge was still clean: `issue-19` never touched `docs/RTVM.md` in its
+own commits, so the 3-way merge just took main's version wholesale —
+no conflict markers at all, not even a cosmetic one. This is the
+mechanic worth remembering: a direct-trunk RTVM edit on a file the
+branch doesn't otherwise touch *always* auto-resolves in git's favor
+of main, regardless of how stale the branch's copy is. Only worry if
+the branch itself also edits `docs/RTVM.md` (e.g. adding a Commit SHA
+note) — that's the case that would produce a real conflict.
