@@ -41,7 +41,7 @@ inline constexpr std::size_t kContainmentLevelCount =
 // doc comment below) -- no separate collection type is needed, mirroring
 // how DATA-OUT-300's "ordered records for the retained top-N" is just
 // `std::vector<RankedCombo>`, not its own named container. This vector
-// is what OUT-401's not-yet-implemented console formatter will consume.
+// is what OUT-401's BacktestReportPresenter consumes.
 struct BacktestResult {
     // The requested sample date, echoed back (YYYY-MM-DD).
     std::string sampleDate;

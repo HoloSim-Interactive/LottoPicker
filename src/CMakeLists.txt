@@ -11,10 +11,12 @@
 # RTVM CORE-206; CompositeScorer.cpp, RTVM CORE-202;
 # Sha256.cpp/ModelSerializer.cpp/ModelStore.cpp, RTVM CORE-204/DATA-OUT-301;
 # RankingEngine.cpp, RTVM CORE-203/DATA-OUT-300;
-# RankedListPresenter.cpp, RTVM OUT-400; BacktestEngine.cpp, RTVM CORE-205).
+# RankedListPresenter.cpp, RTVM OUT-400; BacktestEngine.cpp, RTVM CORE-205;
+# BacktestReportPresenter.cpp, RTVM OUT-401).
 # Add each new feature's .cpp here as it lands.
 add_library(lottopicker_lib STATIC
     BacktestEngine.cpp
+    BacktestReportPresenter.cpp
     CliArgs.cpp
     CompositeScorer.cpp
     CooccurrenceScorer.cpp

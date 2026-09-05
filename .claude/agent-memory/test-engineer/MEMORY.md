@@ -27,6 +27,7 @@ in `.github/AGENT_LABELS.md`.
 - [OUT-400 RankedListPresenter](out_400_ranked_list_presenter.md) — pure-presentation class, no ranking run needed; verified against a synthetic fixture and a real 3-draw CLI run; re-confirmed clean on the issue #21 post-merge trunk regression pass.
 - [CORE-205 BacktestEngine](core_205_backtest_engine.md) — issue #20: first pass FAIL on real clang-format regression; re-verified PASS after `-i` fix; trunk regression PASS post-merge (83/83), broader clang-format sweep caught collateral damage CI/CD fixed pre-merge.
 - [DATA-OUT-302 backtest report structure](data_out_302_backtest_report_structure.md) — issue #22: PASS, 84/84 (note SE's "85/85" was an off-by-one typo); multi-date `--backtest` CLI runs are slow, use `run_in_background` not a longer inline sleep.
+- [OUT-401 BacktestReportPresenter](out_401_backtest_report_presenter.md) — issue #23: PASS, 88/88, 776 assertions; per-date BacktestError correctly excluded from report rows, not faked.
 
 ## Process notes
 

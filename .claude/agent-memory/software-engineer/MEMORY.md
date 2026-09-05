@@ -31,6 +31,7 @@ in `.github/AGENT_LABELS.md`.
 - [OUT-400 RankedListPresenter](out_400_ranked_list_presenter.md) — issue #21: pure-formatting console table class (header + rows, `|`-delimited, column-width padding), tested via hand-built fixture not a real ranking run.
 - [CORE-205 BacktestEngine](core_205_backtest_engine.md) — truncation/era-pool wiring (issue #20), plus two flagged formula judgment calls (percentile, chance-expected containment) pending Systems Engineer confirmation.
 - [DATA-OUT-302 backtest report structure](data_out_302_backtest_report_structure.md) — issue #22: BacktestResult already was the report row (vector<BacktestResult> = the report); third DATA-OUT-30x "struct already exists, add tagged test" case.
+- [OUT-401 BacktestReportPresenter](out_401_backtest_report_presenter.md) — issue #23: console table for DATA-OUT-302, combined Rank column ("<rank>/<topN> (<pct> pct)" or literal "not found in top-N"), hand-built-fixture testing again.
 
 ## Platform-specific notes
 
