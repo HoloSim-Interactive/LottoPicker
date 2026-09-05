@@ -61,29 +61,13 @@ Done
 
 ## 5. Create the labels
 
-```bash
-gh auth login   # one-time, if not already authenticated
-./scripts/setup-labels.sh
-```
-
-Confirm with `gh label list` — expect 22 labels, including
-`agent:product-manager`.
+Done
 
 ---
 
 ## 6. Verify the credential line in `agent-relay.yml`
 
-Open `.github/workflows/agent-relay.yml`, check the `with:` block
-under the "Run Claude Code as..." step, and confirm it matches
-whichever credential you chose in step 2a — exactly one of
-`claude_code_oauth_token` or `anthropic_api_key` active
-(uncommented), the other commented out. If it doesn't match:
-
-```bash
-git add .github/workflows/agent-relay.yml
-git commit -m "Set active credential to match this project's choice"
-git push
-```
+DOne
 
 ---
 
