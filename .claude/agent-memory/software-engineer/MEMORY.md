@@ -16,6 +16,7 @@ in `.github/AGENT_LABELS.md`.
 ## Architecture patterns
 
 - [LottoPicker scaffold](lottopicker_scaffold.md) — CMake layout, INTERFACE lib until first feature source, and the Windows-workflow hand-off note from Generate Code Base (issue #5).
+- [LottoPicker error handling](lottopicker_error_handling.md) — typed-exception pattern (UI-001, issue #6) to extend for future validation errors, plus a clang-format pointer-alignment gotcha.
 
 ## Platform-specific notes
 
