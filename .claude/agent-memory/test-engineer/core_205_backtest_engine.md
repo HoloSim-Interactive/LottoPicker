@@ -1,9 +1,25 @@
 ---
 name: core-205-backtest-engine
-description: TP-CORE-205 on issue #20 — first-pass FAIL was clang-format only (logic correct); re-verified PASS after `clang-format-18 -i` fix, commit 9589e10.
+description: TP-CORE-205 on issue #20 — first-pass FAIL was clang-format only (logic correct); re-verified PASS after `clang-format-18 -i` fix, commit 9589e10; trunk regression PASS post-merge.
 metadata:
   type: project
 ---
+
+**Trunk regression (2026-09-05, post-merge):** CI/CD merged `issue-20` to
+`main` at `e9d03d8`, then fixed one additional clang-format violation
+outside TE's recheck scope (`src/ModelStore.cpp:161`, from the
+`ModelStore::` qualifier added when `buildArtifact` went public) and
+mechanically resolved a concurrent-race conflict against issue #21's
+memory-file commits, final HEAD `a223539`. Clean `main` checkout at
+`3ab34fa` (RTVM SHA-recording commit): full build 142/142, `ctest`
+83/83, `clang-format-18 --dry-run -Werror` clean across all `src/
+include/tests` except the pre-existing `Version.h` nit. **Lesson:**
+Test Engineer's clang-format recheck scope should match the SWE's
+diff, but CI/CD's own pre-merge check can still catch collateral
+damage in unrelated files touched by the same signature change (a
+`public` method's qualifier changing call-site line lengths elsewhere)
+— worth a broader `clang-format` sweep at trunk-regression time, not
+just the files named in the fix commit.
 
 **Resolution (2026-09-05):** re-verified after Software Engineer ran
 `clang-format-18 -i` on both flagged files (commit `9589e10`, whitespace-
