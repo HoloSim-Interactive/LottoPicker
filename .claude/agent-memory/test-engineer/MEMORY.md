@@ -28,6 +28,7 @@ in `.github/AGENT_LABELS.md`.
 - [CORE-205 BacktestEngine](core_205_backtest_engine.md) — issue #20: first pass FAIL on real clang-format regression; re-verified PASS after `-i` fix; trunk regression PASS post-merge (83/83), broader clang-format sweep caught collateral damage CI/CD fixed pre-merge.
 - [DATA-OUT-302 backtest report structure](data_out_302_backtest_report_structure.md) — issue #22: PASS, 84/84 (note SE's "85/85" was an off-by-one typo); multi-date `--backtest` CLI runs are slow, use `run_in_background` not a longer inline sleep.
 - [OUT-401 BacktestReportPresenter](out_401_backtest_report_presenter.md) — issue #23: PASS, 88/88, 776 assertions; per-date BacktestError correctly excluded from report rows, not faked; trunk regression re-confirmed clean at main@46342d6.
+- [NFR-500 offline-operation inspection](lottopicker_generate_code_base.md) — issue #24: PASS, no branch (inspection-only, no code change); reusable 3-part grep/include/CMake recipe for network-call inspection items.
 
 ## Process notes
 

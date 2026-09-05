@@ -176,3 +176,19 @@ recorded SHA + Verified in RTVM (f04b68a), routed back for regression.
 `main` @ f04b68a, clean rebuild from scratch, 74/74 ctest pass
 (unchanged count, includes `RankingEngineTest.cpp`). Binary's
 no-arg usage line unchanged. Same fast path, nothing new.
+
+**NFR-500 offline-operation pass (issue #24, 2026-09-05):** second
+Inspection-type item after CORE-207 (issue #8) — no `issue-24` branch
+exists at all (SWE made no code changes, consistent with a pure
+inspection). Don't expect a branch for these; verify directly against
+`main`. Independently re-ran the grep/include/CMake audit SWE described
+rather than trusting the narrative alone: `grep -rniE
+"socket|curl|http|winsock|asio|urlmon|winhttp|::connect|::send\(|::recv\(|getaddrinfo|WSAStartup"
+src include` → only hit is a non-code comment in `EraTable.h`;
+`grep -rhoE '#include\s*[<"][^">]+[">]' src include | sort -u` → all
+stdlib or local `lottopicker/*`; only network ref anywhere in CMake is
+Catch2's `FetchContent_Declare(... GIT_REPOSITORY ...)` (configure-time,
+sanctioned exception per SDD §Coding Standards). Also ran a full
+88/88 regression as a sanity check since inspection covers the whole
+codebase. This 3-grep recipe is reusable verbatim for any future
+NFR/offline-type inspection item.
