@@ -36,3 +36,15 @@ comment said "85/85 test cases, 721 assertions" but the actual run is
 off-by-one typo in the comment, not a real extra/missing test. Worth
 independently recounting `ctest --preset default`'s tail line rather
 than trusting a quoted count when it's this close to matching.
+
+**Trunk regression pass, second hand-off (2026-09-05):** after CI/CD
+merged `issue-22` to `main` at df2337c (tag v1.0.204) and SE recorded
+the SHA in RTVM (b0765e1), routed back for regression. `main` @
+b0765e1, clean rebuild from scratch, 84/84 ctest pass (unchanged
+count — no concurrent work landed in between). Re-ran the
+`[DATA-OUT-302][CORE-205]` case directly (85 assertions, pass) and
+redid the real end-to-end `--backtest` CLI check with a fresh 8-draw
+fixture — again exactly 3 rows, all fields populated. Config file
+must be `key = value` lines (e.g. `data_file = draws.csv`), not JSON —
+tried JSON first and got `missing required config key: data_file`.
+Standard fast path holds.
