@@ -5,6 +5,7 @@
 
 #include "lottopicker/CooccurrenceScorer.h" // kMinGroupSize/kMaxGroupSize, kGroupSizeCount, GroupKey
 #include "lottopicker/DrawRecord.h"         // kNumbersPerDraw
+#include "lottopicker/ModelArtifact.h" // ModelArtifact (CORE-204's persisted, normalized model)
 #include "lottopicker/PoolSizeNormalizer.h" // PoolSizeNormalizer::Result
 
 namespace lottopicker {
@@ -68,6 +69,22 @@ public:
     // than kNumbersPerDraw numbers.
     static double score(const PoolSizeNormalizer::Result &normalized,
                         const std::array<int, kNumbersPerDraw> &combo,
+                        const CompositeWeights &weights = CompositeWeights{});
+
+    // Same formula, reading directly from a persisted/loaded
+    // ModelArtifact (CORE-204/DATA-OUT-301) instead of a freshly
+    // computed PoolSizeNormalizer::Result -- what CORE-203's ranking
+    // pipeline actually calls, once per candidate combination, since
+    // ranking runs off the persisted model rather than re-normalizing
+    // history on every run. `normDecay(k)` is `model.perNumber.at(k)`
+    // (every pool number is stored, dense); `normCooc(group)` is the
+    // sparse `model.groupScores` lookup when the group was historically
+    // observed, otherwise `0.0 - model.baselineCooc[size]` -- the same
+    // "unobserved group still contributes its chance-expected baseline"
+    // behavior PoolSizeNormalizer::Result::normCooc implements (see
+    // ModelArtifact::baselineCooc's comment for why that scalar has to
+    // be persisted at all).
+    static double score(const ModelArtifact &model, const std::array<int, kNumbersPerDraw> &combo,
                         const CompositeWeights &weights = CompositeWeights{});
 };
 

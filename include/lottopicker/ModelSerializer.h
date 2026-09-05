@@ -11,10 +11,11 @@ namespace lottopicker {
 // plain-text format (docs/SDD.md's Interfaces & File Formats -> "Model
 // artifact"):
 //
-//   LOTTOPICKER_MODEL v1
+//   LOTTOPICKER_MODEL v2
 //   source_hash=<sha256 of data_file's bytes>
 //   date_range=<earliest_date>,<latest_date>
 //   draw_count=<n>
+//   baseline_cooc=<c2>,<c3>,<c4>,<c5>,<c6>
 //   [per_number]
 //   <number>,<decay_score>
 //   ...
@@ -22,6 +23,17 @@ namespace lottopicker {
 //   <n1>,<n2>,<score>
 //   ...
 //   [group_scores:3..6] (same shape, more numbers per line)
+//
+// `baseline_cooc` is new in v2 (added for CORE-203, issue #17; not yet
+// reflected in docs/SDD.md -- flagged to Systems Engineer): the five
+// chance-expected scalars (one per group size 2..6) CORE-203's ranking
+// needs to evaluate norm_cooc for a group never historically observed
+// (see ModelArtifact::baselineCooc's comment). A v1 file (no
+// `baseline_cooc` line) fails to parse under this reader; ModelStore's
+// tryRead()-based reuse check treats that the same as "no valid model
+// yet" and falls back to a rebuild -- self-healing, no migration step
+// needed, consistent with TP-CORE-204's "any change regenerates"
+// behavior.
 //
 // CORE-204's ModelStore uses this to persist a freshly built model and
 // to load a previously persisted one back in.

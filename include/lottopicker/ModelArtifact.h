@@ -1,10 +1,11 @@
 #pragma once
 
+#include <array>
 #include <cstddef>
 #include <map>
 #include <string>
 
-#include "lottopicker/CooccurrenceScorer.h" // GroupKey
+#include "lottopicker/CooccurrenceScorer.h" // GroupKey, kGroupSizeCount, kMinGroupSize
 
 namespace lottopicker {
 
@@ -49,10 +50,32 @@ struct ModelArtifact {
     // docs/SDD.md's documented `[group_scores:N]` sections.
     std::map<int, ModelGroupScoreMap> groupScores;
 
+    // baselineCooc[g - kMinGroupSize] = Sum_d w(age(d)) * p(g, n_era(d))
+    // (docs/SDD.md's Algorithm design, PoolSizeNormalizer's "key
+    // algebraic simplification" comment) -- the chance-expected part of
+    // norm_cooc, shared by every group of size `g`, observed or not.
+    // CORE-203's ranking pipeline needs this: it evaluates norm_cooc for
+    // every one of a candidate combination's `2^6 - 1` subsets, the vast
+    // majority of which were never historically observed and so have no
+    // entry in `groupScores` -- for those, norm_cooc is *not* 0.0, it's
+    // `0.0 - baselineCooc[g]` (CORE-206's own documented behavior,
+    // confirmed by TP-CORE-206 part 2: an unobserved group still
+    // contributes a nonzero, chance-expected-only "surprise"). Without
+    // persisting this alongside the sparse observed-group scores, a
+    // reused (not rebuilt) model artifact would have no way to
+    // reconstruct that value and CORE-203 would silently treat every
+    // unobserved subset as contributing exactly 0.0 instead -- a
+    // correctness gap, not just a missing nice-to-have. Added for
+    // CORE-203 (issue #17); flagged to Systems Engineer as a DATA-OUT-301
+    // format addition (docs/SDD.md's Interfaces & File Formats doesn't
+    // yet document this line).
+    std::array<double, kGroupSizeCount> baselineCooc{};
+
     bool operator==(const ModelArtifact &other) const {
         return sourceHash == other.sourceHash && earliestDate == other.earliestDate &&
                latestDate == other.latestDate && drawCount == other.drawCount &&
-               perNumber == other.perNumber && groupScores == other.groupScores;
+               perNumber == other.perNumber && groupScores == other.groupScores &&
+               baselineCooc == other.baselineCooc;
     }
 };
 

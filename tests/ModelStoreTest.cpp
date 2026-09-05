@@ -1,12 +1,18 @@
 #include "lottopicker/ModelStore.h"
 
+#include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <fstream>
 #include <random>
 
+#include "lottopicker/CooccurrenceScorer.h"
 #include "lottopicker/ModelSerializer.h"
+#include "lottopicker/PoolSizeNormalizer.h"
 
+using lottopicker::kMaxGroupSize;
+using lottopicker::kMinGroupSize;
 using lottopicker::ModelStore;
+using lottopicker::PoolSizeNormalizer;
 
 namespace {
 
@@ -143,6 +149,34 @@ TEST_CASE("ModelStore::computeSourceHash is deterministic and content-sensitive"
     CHECK(hashA != hashC);
 
     std::filesystem::remove(csvPath);
+}
+
+// CORE-203 (issue #17): the built artifact's baselineCooc must match
+// docs/SDD.md's documented formula, baselineCooc[g] = Sum_d w(age(d)) *
+// p(g, n_era(d)) -- a single draw at age 0 (weight 1.0 regardless of
+// halfLifeDraws) dated in the current era (poolSize 53, per EraTagger)
+// reduces this to exactly hypergeometricProbability(g, 53) for each
+// group size, letting this test verify against CORE-206's own already-
+// Verified public formula rather than a second hand-typed fraction.
+TEST_CASE("ModelStore's built artifact stores baselineCooc per the documented formula",
+          "[CORE-203][CORE-204]") {
+    const std::filesystem::path csvPath = uniqueTempCsvPath();
+    const std::filesystem::path modelPath = ModelStore::defaultModelPath(csvPath);
+    std::filesystem::remove(modelPath);
+    writeCsv(csvPath, "date,n1,n2,n3,n4,n5,n6\n"
+                      "2020-01-01,1,2,3,4,5,6\n");
+
+    const auto result = ModelStore::loadOrBuild(csvPath, modelPath);
+    REQUIRE(result.artifact.drawCount == 1);
+
+    for (int groupSize = kMinGroupSize; groupSize <= kMaxGroupSize; ++groupSize) {
+        const double expected = PoolSizeNormalizer::hypergeometricProbability(groupSize, 53);
+        CHECK(result.artifact.baselineCooc[static_cast<std::size_t>(groupSize - kMinGroupSize)] ==
+              Catch::Approx(expected).margin(1e-12));
+    }
+
+    std::filesystem::remove(csvPath);
+    std::filesystem::remove(modelPath);
 }
 
 TEST_CASE("ModelStore::defaultModelPath appends .model alongside the data file", "[CORE-204]") {

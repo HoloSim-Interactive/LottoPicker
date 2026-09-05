@@ -7,6 +7,7 @@
 #include "lottopicker/Config.h"
 #include "lottopicker/Errors.h"
 #include "lottopicker/ModelStore.h"
+#include "lottopicker/RankingEngine.h"
 #include "lottopicker/Version.h"
 
 // Host/entry point only — no domain logic here (see lottopicker_lib in
@@ -58,9 +59,22 @@ int main(int argc, char **argv) {
                 std::cout << "  " << date << ": backtest engine not yet implemented (CORE-205)\n";
             }
         } else {
-            // Normal ranking path; the ranking pipeline itself is not yet
-            // implemented (CORE-202/203).
+            // Normal ranking path (CORE-203): score the full combination
+            // space against the model just loaded/built above, retaining
+            // only config.topN via RankingEngine's fixed-size heap.
+            // Console formatting here is intentionally minimal (a plain
+            // rank/combo/score line) -- OUT-400's fully human-readable
+            // presentation is a separate, not-yet-implemented RTVM item.
             std::cout << "mode: rank\n";
+            const std::vector<lottopicker::RankedCombo> ranked =
+                lottopicker::RankingEngine::rank(modelResult.artifact, config.topN);
+            for (const lottopicker::RankedCombo &entry : ranked) {
+                std::cout << "  " << entry.rank << ":";
+                for (int number : entry.combo) {
+                    std::cout << " " << number;
+                }
+                std::cout << " (score=" << entry.score << ")\n";
+            }
         }
         return EXIT_SUCCESS;
     } catch (const lottopicker::LottoPickerError &e) {
