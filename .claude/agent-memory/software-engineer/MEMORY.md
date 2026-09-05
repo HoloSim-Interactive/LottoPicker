@@ -33,6 +33,7 @@ in `.github/AGENT_LABELS.md`.
 - [DATA-OUT-302 backtest report structure](data_out_302_backtest_report_structure.md) — issue #22: BacktestResult already was the report row (vector<BacktestResult> = the report); third DATA-OUT-30x "struct already exists, add tagged test" case.
 - [OUT-401 BacktestReportPresenter](out_401_backtest_report_presenter.md) — issue #23: console table for DATA-OUT-302, combined Rank column ("<rank>/<topN> (<pct> pct)" or literal "not found in top-N"), hand-built-fixture testing again.
 - [DELIV-900 run documentation](deliv_900_run_documentation.md) — issue #25: real README.md + examples/ sample CSV/config, captured-not-typed console output, and the always-~1min-per-run (even on tiny data) timing gotcha to document.
+- [DELIV-901 Windows consolidation check](deliv_901_windows_consolidation_check.md) — issue #26: preset verified correct, but windows-verification.yml still undeployed at its named resolution point — escalated status:blocked to Systems Engineer, not handed to Test Engineer.
 
 ## Platform-specific notes
 
