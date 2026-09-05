@@ -1,0 +1,91 @@
+name: usage-reset-resume
+#
+# Closes the last gap in the usage-window story (2026-08-25). The relay's
+# failure handler parks each affected issue (status:needs-human + a
+# comment stating the exact reset time) when the subscription window
+# exhausts. This sweep is the matching RESUME: once that reset time has
+# passed, it restores the parked agent label so work continues with no
+# human in the loop. Costs zero Anthropic tokens -- plain gh CLI.
+#
+# Deliberately narrow: an issue is resumed ONLY if its most recent
+# comment is the usage-exhaustion parking comment (matched on its
+# distinctive wording) AND that comment's stated reset time is in the
+# past. A needs-human applied for any other reason -- a real human step,
+# an unclassified failure, a client hold -- has a different last comment
+# and is never touched.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  issues: write
+
+concurrency:
+  group: usage-reset-resume
+  cancel-in-progress: true
+
+jobs:
+  resume:
+    runs-on: [self-hosted, agents]
+    defaults:
+      run:
+        shell: bash
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ secrets.RELAY_TOKEN }}
+    steps:
+      - name: Resume issues parked by usage-window exhaustion
+        run: |
+          set -euo pipefail
+          NOW=$(date -u +%s)
+
+          gh issue list --label "status:needs-human" --state open \
+            --json number --repo "${{ github.repository }}" \
+            | jq -r '.[].number' | tr -d '\r' \
+            | while read -r NUMBER; do
+                LAST=$(gh issue view "$NUMBER" --repo "${{ github.repository }}" \
+                  --json comments -q '.comments[-1].body' 2>/dev/null | tr -d '\r' || true)
+
+                # Must be the parking comment, as the LATEST comment.
+                if ! grep -q "usage window is exhausted" <<< "$LAST"; then
+                  echo "#$NUMBER: last comment is not a usage parking -- leaving alone"
+                  continue
+                fi
+
+                # Reset time, written by the relay as: **YYYY-MM-DD HH:MM UTC**
+                STAMP=$(grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2} UTC' <<< "$LAST" | head -1 || true)
+                if [[ -z "$STAMP" ]]; then
+                  echo "#$NUMBER: parking comment has no parseable reset time -- leaving for a human"
+                  continue
+                fi
+                RESET=$(date -u -d "${STAMP% UTC}" +%s 2>/dev/null || echo 0)
+                if [[ "$RESET" -eq 0 ]] || (( NOW < RESET )); then
+                  echo "#$NUMBER: window resets at $STAMP -- not yet"
+                  continue
+                fi
+
+                # Role to restore, from the same comment: "re-add agent:<role>"
+                # The park comment wraps between "re-add" and the label, and
+                # grep is line-based -- requiring them on one line made every
+                # wrapped comment parse as "no agent label" (2026-08-25).
+                # The comment names exactly one agent:* label, so match it
+                # directly.
+                ROLE=$(grep -oE 'agent:[a-z-]+' <<< "$LAST" | head -1 || true)
+                if [[ -z "$ROLE" ]]; then
+                  echo "#$NUMBER: parking comment names no agent label -- leaving for a human"
+                  continue
+                fi
+
+                echo "#$NUMBER: reset time $STAMP has passed -- resuming $ROLE"
+                gh issue comment "$NUMBER" --repo "${{ github.repository }}" --body \
+                  "All agents, this is usage-reset-resume (automated sweep): the usage window reset at $STAMP has passed. Removing status:needs-human and restoring $ROLE to resume where the parking comment left off.
+
+          **Next:** $ROLE picks up this issue."
+                gh issue edit "$NUMBER" --repo "${{ github.repository }}" \
+                  --remove-label "status:needs-human"
+                gh issue edit "$NUMBER" --repo "${{ github.repository }}" \
+                  --add-label "$ROLE"
+              done
+          echo "sweep complete"

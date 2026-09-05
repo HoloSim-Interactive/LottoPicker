@@ -1,0 +1,52 @@
+name: stall-recovery
+
+# Finds open issues whose label state has gone inconsistent or stale --
+# a hand-off that half-completed, a status:in-progress left behind by a
+# run that died, mutually exclusive status labels on the same issue --
+# reconciles them, and retriggers the responsible agent.
+#
+# All the actual logic lives in scripts/reconcile-labels.sh so it can be
+# run locally with --dry-run to see what it would do before it does it:
+#
+#   ./scripts/reconcile-labels.sh --dry-run --force-immediate
+#
+# Costs no Anthropic tokens -- this is plain gh CLI. Intentional pauses
+# are never touched; the authoritative list is PAUSE_RE in
+# scripts/reconcile-labels.sh (blocked, needs-human, on-hold,
+# waiting-on-lock, paused, cancelled, ready-for-review,
+# ready-for-client-test).
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+    inputs:
+      force_immediate:
+        description: "Skip the 1-hour idle check and reconcile everything eligible right now"
+        type: boolean
+        default: false
+      dry_run:
+        description: "Report what would change without changing anything"
+        type: boolean
+        default: false
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.RELAY_TOKEN }}
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Reconcile labels and retrigger stalled work
+        run: |
+          chmod +x scripts/reconcile-labels.sh
+          ARGS=(--repo "${{ github.repository }}")
+          [[ "${{ inputs.force_immediate }}" == "true" ]] && ARGS+=(--force-immediate)
+          [[ "${{ inputs.dry_run }}" == "true" ]] && ARGS+=(--dry-run)
+          ./scripts/reconcile-labels.sh "${ARGS[@]}"

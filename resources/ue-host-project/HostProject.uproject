@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "5.6",
+	"Category": "",
+	"Description": "Barebones UE 5.6 host project for plugin build/test. See README.md beside this file.",
+	"Modules": [
+		{
+			"Name": "HostProject",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
