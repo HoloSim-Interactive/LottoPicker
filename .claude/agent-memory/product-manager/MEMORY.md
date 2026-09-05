@@ -15,8 +15,16 @@ in `.github/AGENT_LABELS.md`.
 
 ## Understanding of the product
 
+- [Client context](client_context.md) — Kyle/HoloSim, C++ CLI Florida Lotto statistics tool, cheap budget, no user docs needed.
+
 ## Client / stakeholder context
+
+- See [client_context.md](client_context.md).
 
 ## Open questions log
 
+- [Scope decisions & open questions](scope_decisions.md) — 5 open questions sent to client on issue #1 (2026-09-05): game scope, data source, historical rule changes, output size, target OS.
+
 ## Decisions made
+
+- 2026-09-05: MVP = Florida Lotto only, single composite algorithm (client's described approach, not comparative research), backtest is a first-class feature. See [scope_decisions.md](scope_decisions.md).
