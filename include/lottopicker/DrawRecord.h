@@ -24,12 +24,19 @@ inline constexpr int kNumbersPerDraw = 6;
 // would be unused complexity. DATA-IN-101's era tagging compares this
 // string lexicographically against era boundary dates, which works
 // correctly for zero-padded ISO-8601 dates.
+//
+// `poolSize` is 0 until DATA-IN-101's EraTagger runs (CsvIngestor
+// itself doesn't set it -- ingestion validates against the *widest*
+// documented pool, see CsvIngestor.h, and stays decoupled from era
+// logic). A value of 0 therefore means "not yet tagged", never a real
+// pool size.
 struct DrawRecord {
     std::string date;
     std::array<int, kNumbersPerDraw> numbers{};
+    int poolSize = 0;
 
     bool operator==(const DrawRecord &other) const {
-        return date == other.date && numbers == other.numbers;
+        return date == other.date && numbers == other.numbers && poolSize == other.poolSize;
     }
 };
 
