@@ -17,6 +17,11 @@ in `.github/AGENT_LABELS.md`.
 
 ## Build & toolchain notes
 
+- [Shallow-clone merge-base gotcha](shallow_clone_merge_base.md) — `git merge-base`/`rev-list` on `origin/main` lie if the checkout is shallow; `git fetch --unshallow` before trusting them.
+
 ## Release & versioning
+
+- LottoPicker's `VERSION` file didn't exist before issue #5's merge (Generate Code Base, the project's first trunk merge) — created as `1.0` per the standing rule, noted in that commit.
+- LottoPicker: no RTVM item reaches Verified until individual `[RTVM-xxx]` feature issues land — Generate Code Base merge (v1.0.28) only tagged, no release cut.
 
 ## Known issues
