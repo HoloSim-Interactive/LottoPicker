@@ -25,6 +25,10 @@ in `.github/AGENT_LABELS.md`.
 - [CORE-203 RankingEngine](core_203_ranking_engine.md) — full-pool real runs take ~1min wall-clock, not a hang; open SDD v1/v2 model-format doc flag to recheck at RTVM-update time.
 - [DATA-OUT-300 ranked-list structure](data_out_300_ranked_list_structure.md) — issue #19: "already-shipped" RTVM items can still need a small new dedicated-tag/exact-fixture test, not always a no-diff pass; clang-format path gotcha noted.
 
+## Process notes
+
+- Usage-window parking (`status:needs-human` → auto-resume): when resumed, check whether your last comment already posted before the session died — often only the label hand-off failed. Verify current repo state still matches what that comment reported (same SHA, clean tree) rather than re-running the full test pass, then just re-issue the stalled hand-off labels. Seen on issue #19 (DATA-OUT-300 regression pass).
+
 ## Platform-specific test considerations
 
 ## Recurring failure patterns
