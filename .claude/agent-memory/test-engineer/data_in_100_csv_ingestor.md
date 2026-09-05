@@ -26,6 +26,15 @@ Systems Engineer settles it later, expect a corresponding one-line
 change in `CsvIngestor::ingest` (row number computed in exactly one
 place, per Software Engineer's comment on #7).
 
+**Regression pass on trunk (2026-09-05, issue #7 reopened for CI/CD's
+post-merge regression request):** clean `main` checkout at `21c3234`
+(RTVM SHA-record commit, confirms merge SHA `f744a86` in history), full
+clean rebuild, 116/116 targets, `ctest` 10/10 including both
+TP-DATA-IN-100 parts, `lottopicker` binary runs. RTVM already showed
+Verified with SHA recorded, so handed straight through per the
+post-merge fast path in [[lottopicker-generate-code-base]] rather than
+editing RTVM myself.
+
 **Reusable pattern for future ingestion/parsing issues:** when the
 feature under test is a library call with no CLI entry point yet, write
 a throwaway standalone `.cpp` that `#include`s the header and compiles
