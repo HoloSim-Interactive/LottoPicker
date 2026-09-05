@@ -27,6 +27,7 @@ in `.github/AGENT_LABELS.md`.
 - [Genuine research via public APIs](genuine_research_via_public_apis.md) — Crossref/GitHub-search/Wikipedia REST calls for real, checkable sources when a stakeholder need demands actual comparative research, not restated client description.
 - [Branch convention: pre- vs post-merge](branch_convention_pre_vs_post_merge.md) — issue-<N> branch is for pre-merge collaboration; once CI/CD reports a merge SHA, editing main directly for the RTVM SHA/status update is correct, not a repeat of the direct-to-trunk flag.
 - [DATA-IN-101 missing real CSV](data_in_101_missing_real_csv.md) — resolved: SA ruled Verified gate is part 1 only, part 2 deferred to DELIV-900; reuse this pattern directly if a test clause ever depends on a client-controlled artifact with no ETA.
+- [RTVM fast-path: reconcile against main](rtvm_fast_path_reconcile_against_main.md) — if Test Engineer flags main is ahead of the feature branch's RTVM copy, edit main directly, not the stale branch copy.
 
 ## Documentation index
 
