@@ -52,3 +52,17 @@ empty. Hand-off comment in this case, and in the issue #8 precedent,
 omitted a new status label entirely and went straight to
 `agent:systems-engineer` with no `status:*` add (step 6c is skippable
 when there's genuinely nothing to report beyond "already done").
+
+Confirmed a fifth time on issue #18 (DATA-OUT-301), 2026-09-05 — first
+occurrence on a *Test*-method RTVM item satisfied by an earlier scope
+call (issue #16/CORE-204's `ModelSerializer`), not an Inspection item:
+SE's RTVM edit `cd5d297` recorded commit `86ca3ed` (already tagged
+v1.0.145 from #16), landing directly on `main` before this issue #18
+ever had a CI/CD merge of its own — but licensed because the
+substantive commit predates issue #18's whole cycle, not because it
+came after a CI/CD report on *this* issue. `origin/main..origin/issue-18`
+was memory-notes only. Pattern generalizes beyond "SHA already
+reported by CI/CD on this issue" to "SHA already exists on trunk from
+a prior issue, nothing this cycle needed to commit." Same handling:
+no merge, no tag, hand off to `agent:systems-engineer` with no new
+status label.
