@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+
+# CMake build trees (CMakePresets.json's binaryDir) and IDE-local files
+/build/
+.vs/
+.vscode/
+CMakeUserPresets.json
+compile_commands.json
