@@ -25,3 +25,5 @@ in `.github/AGENT_LABELS.md`.
 - LottoPicker: no RTVM item reaches Verified until individual `[RTVM-xxx]` feature issues land — Generate Code Base merge (v1.0.28) only tagged, no release cut.
 
 ## Known issues
+
+- [Inspection-item direct-trunk commit](inspection_item_direct_trunk_commit.md) — on CORE-207/issue #8, Systems Engineer committed the RTVM status change straight to main instead of via CI/CD; check both directions of the diff before assuming the branch has the work.
