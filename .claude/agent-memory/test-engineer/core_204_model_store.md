@@ -34,3 +34,13 @@ Also re-confirmed `clang-format --dry-run -Werror` clean on all new/
 changed files (ModelStore, Sha256, ModelArtifact, ModelSerializer,
 main.cpp) — same check pattern as [[lottopicker_generate_code_base]]'s
 CORE-200 note.
+
+**Trunk regression re-check** (same issue #16, after CI/CD merge
+86ca3ed / v1.0.145): re-ran the exact 4-run CLI recipe above directly
+against trunk's build — same rebuilt/reused/rebuilt/reused sequence,
+`source_hash=` changed only on the appended-row runs. 64/64 ctest
+(59 + CORE-202's 5). Confirms the pattern from issue #15's CORE-202
+regression pass: a trunk-merge regression request routes back to
+`agent:systems-engineer` / `status:ready-for-rtvm-update`, not to
+CI/CD directly — Systems Engineer records the regression pass and
+re-releases to CI/CD from there.
