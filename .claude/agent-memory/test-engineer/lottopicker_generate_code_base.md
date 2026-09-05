@@ -121,6 +121,18 @@ enough; no need to hand-verify the arithmetic by hand unless the SDD
 formula itself is in question. Also checked `clang-format --dry-run
 -Werror` on the three new/changed files as SWE claimed — clean.
 
+**CORE-206 PoolSizeNormalizer pass (issue #14, 2026-09-05):** first CORE-2xx
+item that reuses two prior scorers' raw scores algebraically rather than
+recomputing (baseline-subtraction shortcut documented in the header) —
+worth reading the header's derivation, not just running tests, since a
+subtly wrong algebraic shortcut could still pass tests built against the
+same (wrong) reasoning. Standard build/ctest sufficed: 42/42 (34 prior + 8
+new `PoolSizeNormalizerTest.cpp`), TP-CORE-206's 3 parts map to named
+tests directly. Also confirms the `kDefaultHalfLifeDraws` dedup (moved
+solely into `DecayScorer.h`, `CooccurrenceScorer.h` now includes it) —
+a housekeeping fix bundled into a feature commit, no RTVM impact, worth
+spot-checking for behavior change but not flagging as scope creep.
+
 **CORE-200 regression pass on trunk, same issue #11, second hand-off
 (2026-09-05):** after CI/CD merged `issue-11` into `main` at 5e7f0fc
 (three reset-and-redo cycles against concurrent #10/#12 activity,
