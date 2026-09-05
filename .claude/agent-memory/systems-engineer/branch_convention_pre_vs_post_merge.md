@@ -100,3 +100,20 @@ the interim — CI/CD's own memory-file commit, unrelated file); a plain
 Recorded the SHA in OUT-401's Commit(s) column, then still handed off
 `status:ready-for-test` → `agent:test-engineer` per the fast path
 since CI/CD flagged regression testing needed.
+
+Confirmed a new variant on issue #24 (NFR-500, 2026-09-05): this is an
+Inspection-method item, never had a code change or `issue-24` branch
+at all (SWE and TE both explicitly noted no branch exists — consistent
+with how CORE-207/issue #8 handled inspection-only). No prior
+commit-confirmation step ever happened for this item since there's
+never a merge to confirm. The "has CI/CD already reported a merge SHA"
+test doesn't really apply — treat "no branch was ever created because
+the item is inspection-only" as its own green light to edit `main`
+directly. Status went straight to Verified (skip the "In Test... SHA
+pending" intermediate text used for code-bearing items) since there's
+no merge step to wait on. Commit(s) column got a prose note instead of
+a SHA. Push was rejected once by an unrelated concurrent commit
+(Test Engineer's memory-file update); `git rebase origin/main` resolved
+it with no conflict, same as the #23 case above. Still handed off
+`status:ready-for-commit` → `agent:cicd` per the fast path even though
+CI/CD will find nothing to merge.
