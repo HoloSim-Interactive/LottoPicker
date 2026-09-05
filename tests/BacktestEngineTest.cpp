@@ -158,6 +158,86 @@ TEST_CASE("BacktestEngine throws when no draw exists strictly before the sample 
         BacktestError);
 }
 
+// TP-DATA-OUT-302 -- backtest report structure integrity across 3
+// sampled years.
+//
+// The report structure itself is just `std::vector<BacktestResult>`
+// with one entry per requested date (see BacktestEngine.h's DATA-OUT-302
+// comment) -- so this test builds that vector the same way a
+// `--backtest <date1,date2,date3>` caller (UI-003/main.cpp) would, one
+// `BacktestEngine::run` call per year, and checks the resulting
+// structure directly.
+//
+// Reuses TP-CORE-205 part 1's exact pool-size-9 fixture shape (a single
+// era boundary putting the whole history at pool 9, so C(9,6) = 84 is
+// the entire combination space and topN=100 retains all of it) for all
+// three years. That full-space-retention property makes the observed
+// containment breakdown depend only on the *sizes* of the actual draw
+// (6 numbers) and its outside-numbers complement (9-6=3), not on which
+// specific numbers are drawn -- see TP-CORE-205 part 1's derivation --
+// so every year is expected to reproduce that same hand-verified
+// 20/45/18/1 breakdown at levels 3/4/5/6, "consistent with TP-CORE-205's
+// results" per TP-DATA-OUT-302's own wording, even though each year's
+// actual draw and truncated training set differ.
+TEST_CASE("Backtest report is one populated row per sampled year, matching TP-CORE-205's "
+          "containment counts",
+          "[DATA-OUT-302][CORE-205]") {
+    const std::vector<EraBoundary> syntheticEras = {{"1970-01-01", 9}};
+
+    const std::vector<DrawRecord> history = {
+        DrawRecord{"2016-01-01", {4, 5, 6, 7, 8, 9}, 9}, // training draw, before every sample year
+        DrawRecord{"2017-01-01", {1, 2, 3, 4, 5, 6}, 9}, // year 1's held-out actual draw
+        DrawRecord{"2018-01-01", {2, 3, 4, 5, 6, 7}, 9}, // year 2's held-out actual draw
+        DrawRecord{"2019-01-01", {3, 4, 5, 6, 7, 8}, 9}, // year 3's held-out actual draw
+    };
+    const std::vector<std::string> sampleDates = {"2017-01-01", "2018-01-01", "2019-01-01"};
+
+    std::vector<BacktestResult> report;
+    report.reserve(sampleDates.size());
+    for (const std::string &date : sampleDates) {
+        report.push_back(BacktestEngine::run(history, date, /*topN=*/100, zeroGroupWeights(),
+                                             /*poolMin=*/1, /*halfLifeDraws=*/104, syntheticEras));
+    }
+
+    // Exactly one row per sampled year.
+    REQUIRE(report.size() == 3);
+
+    for (std::size_t i = 0; i < report.size(); ++i) {
+        const BacktestResult &row = report[i];
+        CHECK(row.sampleDate == sampleDates[i]);
+
+        // All fields populated: echoed actual draw, era-appropriate
+        // pool/topN, a definite found/rank/percentile outcome (found is
+        // guaranteed here since topN=100 > the 84-combination full
+        // space), and a fully filled containment breakdown.
+        for (int n : row.actualDraw) {
+            CHECK(n >= 1);
+            CHECK(n <= 9);
+        }
+        CHECK(row.poolMax == 9);
+        CHECK(row.topN == 84); // full space, not the requested 100
+
+        REQUIRE(row.found);
+        CHECK(row.rank >= 1);
+        CHECK(row.rank <= 84);
+        CHECK(row.percentile == Catch::Approx(100.0 * (84.0 - row.rank + 1.0) / 84.0).margin(1e-9));
+
+        REQUIRE(row.observedContainment.size() == 4);
+        CHECK(row.observedContainment[3 - kMinContainmentLevel] == 20); // exactly 3 of 6
+        CHECK(row.observedContainment[4 - kMinContainmentLevel] == 45); // exactly 4 of 6
+        CHECK(row.observedContainment[5 - kMinContainmentLevel] == 18); // exactly 5 of 6
+        CHECK(row.observedContainment[6 - kMinContainmentLevel] == 1);  // exactly 6 of 6
+
+        for (int level = kMinContainmentLevel; level <= kMaxContainmentLevel; ++level) {
+            const double expected =
+                static_cast<double>(row.topN) *
+                PoolSizeNormalizer::hypergeometricProbability(level, row.poolMax);
+            CHECK(row.chanceExpectedContainment[static_cast<std::size_t>(
+                      level - kMinContainmentLevel)] == Catch::Approx(expected).margin(1e-9));
+        }
+    }
+}
+
 // The era-appropriate pool bound (not a fixed constant) governs the
 // ranking domain -- a sample date on/after the second boundary uses
 // that era's (larger) pool size, not the first era's.

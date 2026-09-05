@@ -26,6 +26,7 @@ in `.github/AGENT_LABELS.md`.
 - [DATA-OUT-300 ranked-list structure](data_out_300_ranked_list_structure.md) — issue #19: "already-shipped" RTVM items can still need a small new dedicated-tag/exact-fixture test, not always a no-diff pass; clang-format path gotcha noted.
 - [OUT-400 RankedListPresenter](out_400_ranked_list_presenter.md) — pure-presentation class, no ranking run needed; verified against a synthetic fixture and a real 3-draw CLI run; re-confirmed clean on the issue #21 post-merge trunk regression pass.
 - [CORE-205 BacktestEngine](core_205_backtest_engine.md) — issue #20: first pass FAIL on real clang-format regression; re-verified PASS after `-i` fix; trunk regression PASS post-merge (83/83), broader clang-format sweep caught collateral damage CI/CD fixed pre-merge.
+- [DATA-OUT-302 backtest report structure](data_out_302_backtest_report_structure.md) — issue #22: PASS, 84/84 (note SE's "85/85" was an off-by-one typo); multi-date `--backtest` CLI runs are slow, use `run_in_background` not a longer inline sleep.
 
 ## Process notes
 
