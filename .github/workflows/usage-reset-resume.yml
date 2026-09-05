@@ -28,7 +28,7 @@ concurrency:
 
 jobs:
   resume:
-    runs-on: [self-hosted, agents]
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash

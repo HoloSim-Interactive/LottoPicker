@@ -1,0 +1,154 @@
+# Cross-platform build and test — the ordinary CI gate.
+#
+# ---------------------------------------------------------------------------
+# DEPLOYMENT: no agent in this pipeline can push a file under
+# .github/workflows/ — the GitHub App has no `workflows` permission, and that
+# permission cannot be granted (the App does not declare it). A human copies
+# this file to .github/workflows/build-and-test.yml once, by hand.
+# ---------------------------------------------------------------------------
+#
+# NO PER-PROJECT EDITING. The `detect` job finds which toolchains are in the
+# repo and runs only the matching steps. Solutions, projects, and test targets
+# are discovered, never hardcoded. If you find yourself editing this file to
+# name a specific .sln, .csproj, or executable, stop — that's how the last two
+# copies of this workflow ended up stale in a project they didn't belong to.
+#
+# Scope: this is the plain build-and-test gate on both platforms.
+# docs/ci/windows-verification.yml is the deeper Windows-only evidence pass;
+# the two are complementary, not duplicates.
+#
+# NOT covered: engine builds. Unreal and Unity aren't installed on hosted
+# runners, so an engine project's C++ can't be compiled here. Verify that by
+# client acceptance, or set up a self-hosted runner. A CMake-built library
+# that an engine later consumes IS covered — build and test it here, where
+# it's cheap.
+
+name: build-and-test
+
+on:
+  push:
+    branches:
+      - main
+      - "issue-*"
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+# Keyed on the SHA, not the ref, and never cancelling in progress.
+# Measured on DungeonMaster 2026-08-25: agents push roughly 30 s apart
+# while a run takes 45-65 s, so a ref-scoped group with
+# cancel-in-progress cancelled 9 of 12 runs -- every commit but the last
+# in each burst went unverified, which is the opposite of what a build
+# gate is for. Note that cancel-in-progress: false ALONE is not the fix:
+# with a ref-scoped group the queued runs still collapse. The SHA key is
+# what makes every commit get its own verification.
+concurrency:
+  group: build-and-test-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      cmake: ${{ steps.scan.outputs.cmake }}
+      dotnet: ${{ steps.scan.outputs.dotnet }}
+      any: ${{ steps.scan.outputs.any }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: scan
+        run: |
+          CMAKE=$(find . -name 'CMakeLists.txt' -not -path './**/build/*' | head -1)
+          CS=$(find . -name '*.csproj' -not -path './**/obj/*' -not -path './publish/*' | head -1)
+          [[ -n "$CMAKE" ]] && echo "cmake=true"  >> "$GITHUB_OUTPUT" || echo "cmake=false"  >> "$GITHUB_OUTPUT"
+          [[ -n "$CS"    ]] && echo "dotnet=true" >> "$GITHUB_OUTPUT" || echo "dotnet=false" >> "$GITHUB_OUTPUT"
+          if [[ -n "$CMAKE" || -n "$CS" ]]; then
+            echo "any=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "any=false" >> "$GITHUB_OUTPUT"
+          fi
+          {
+            echo "## Toolchains detected"
+            echo ""
+            echo "| Toolchain | Present |"
+            echo "| --- | --- |"
+            echo "| CMake/CTest | $([[ -n "$CMAKE" ]] && echo yes || echo no) |"
+            echo "| .NET | $([[ -n "$CS" ]] && echo yes || echo no) |"
+            if [[ -z "$CMAKE" && -z "$CS" ]]; then
+              echo ""
+              echo "_No buildable toolchain found. If this project's code lives in an"
+              echo "engine (Unreal/Unity), that's expected — hosted runners can't build"
+              echo "it. Verification is by client acceptance._"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  build-and-test:
+    needs: detect
+    if: needs.detect.outputs.any == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      # ---------- CMake / CTest ----------
+      - name: Configure (CMake)
+        if: needs.detect.outputs.cmake == 'true'
+        shell: bash
+        run: |
+          # Discover the top-level CMakeLists.txt rather than assuming a path.
+          ROOT=$(find . -name 'CMakeLists.txt' -not -path './**/build/*' \
+                 | awk -F/ '{print NF-1"\t"$0}' | sort -n | head -1 | cut -f2)
+          ROOT_DIR=$(dirname "$ROOT")
+          echo "CMAKE_ROOT=$ROOT_DIR" >> "$GITHUB_ENV"
+          cmake -S "$ROOT_DIR" -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build (CMake)
+        if: needs.detect.outputs.cmake == 'true'
+        shell: bash
+        run: cmake --build build --config Release
+
+      - name: Test (CTest)
+        if: needs.detect.outputs.cmake == 'true'
+        shell: bash
+        run: |
+          # --output-on-failure so a red run says why without digging into
+          # artifacts. --no-tests=error so an empty suite fails loudly rather
+          # than reporting a green pass for zero tests.
+          ctest --test-dir build --build-config Release \
+                --output-on-failure --no-tests=error
+
+      # ---------- .NET ----------
+      - name: Set up .NET
+        if: needs.detect.outputs.dotnet == 'true'
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: ${{ hashFiles('global.json') != '' && 'global.json' || '' }}
+          dotnet-version: ${{ hashFiles('global.json') == '' && '8.0.x' || '' }}
+
+      - name: Build and test (.NET)
+        if: needs.detect.outputs.dotnet == 'true'
+        shell: bash
+        run: |
+          TARGET=$(find . -name '*.sln' | head -1)
+          [[ -z "$TARGET" ]] && TARGET="."
+          echo "building: $TARGET"
+          dotnet restore "$TARGET"
+          dotnet build   "$TARGET" -c Release --no-restore
+          dotnet test    "$TARGET" -c Release --no-build --logger "trx;LogFileName=tests-${{ matrix.os }}.trx" \
+            --results-directory test-results
+
+      - name: Publish test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}-${{ github.sha }}
+          path: |
+            test-results/
+            build/Testing/
+          retention-days: 30
+          if-no-files-found: ignore

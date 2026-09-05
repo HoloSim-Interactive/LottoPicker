@@ -73,7 +73,11 @@ DOne
 
 ## 7. Submit the kickoff issue
 
-
+Done — issue #1. Relay switched to GitHub-hosted `ubuntu-latest`
+runners (2026-09-05): this repo is public, so hosted minutes are free,
+and the org's self-hosted "agents" pool is not granted to it.
+`docs/ci/build-and-test.yml` deployed to `.github/workflows/` at the
+same time so the CMake gate is live once code lands.
 
 ---
 

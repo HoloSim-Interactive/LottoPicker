@@ -1,15 +1,12 @@
 name: agent-relay
 #
-# SELF-HOSTED (2026-08-23; relabelled 2026-08-24): runs on the "agents"
-# runner pool -- self-hosted listeners on the client's Windows machine --
-# instead of GitHub-hosted VMs, whose minutes this account has exhausted.
-# Runner labels name a PURPOSE ("agents" for relay work, "ci" for builds),
-# never a toolchain: every runner here shares one physical machine, so a
-# capability label could not tell them apart, and an engine name would be
-# a fossil of a different project. Two runners carry "agents", so two
-# hand-offs execute concurrently. The runner's default shell on Windows is
-# PowerShell, so every job sets shell: bash (Git Bash) to keep the
-# original scripts verbatim.
+# GITHUB-HOSTED (2026-09-05): runs on ubuntu-latest. The template's
+# self-hosted "agents" pool exists because a PRIVATE repo's hosted minutes
+# ran out; this repo is PUBLIC, where hosted runners are free and
+# unlimited, and the org's two Windows runners are neither granted to this
+# repo nor idle. Every pickup gets its own fresh VM, so concurrency is
+# bounded only by the per-issue group below. Claude Code is installed by
+# the action itself on Linux -- no path_to_claude_code_executable.
 
 # Fires whenever an "agent:*" label lands on an issue. Label changes
 # are the sole trigger -- comments never trigger anything, by design.
@@ -60,7 +57,7 @@ concurrency:
 jobs:
   relay:
     if: startsWith(github.event.label.name, 'agent:')
-    runs-on: [self-hosted, agents]
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
@@ -128,13 +125,6 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           allowed_bots: "claude[bot]"
-          # Self-hosted Windows runner (2026-08-24): the action's
-          # auto-installer refuses Windows ("Windows is not supported
-          # by this script" -- see run 32666986086, the first relay
-          # attempt on holosim-ue-01). The runner host already has
-          # Claude Code installed; point the action at it and skip
-          # the install step entirely.
-          path_to_claude_code_executable: 'C:\Users\Owner\.local\bin\claude.exe'
           # Full output includes the actual error detail (error/error_type/
           # message) on failure, not just the summary result object -- what
           # we were missing this time. Tradeoff: it also means raw prompts
