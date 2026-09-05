@@ -30,6 +30,7 @@ in `.github/AGENT_LABELS.md`.
 - [DATA-OUT-300 ranked-list structure](data_out_300_ranked_list_structure.md) — issue #19: struct already existed from CORE-203; only a dedicated `[DATA-OUT-300]`-tagged test (topN=5, per TP text) was the real gap.
 - [OUT-400 RankedListPresenter](out_400_ranked_list_presenter.md) — issue #21: pure-formatting console table class (header + rows, `|`-delimited, column-width padding), tested via hand-built fixture not a real ranking run.
 - [CORE-205 BacktestEngine](core_205_backtest_engine.md) — truncation/era-pool wiring (issue #20), plus two flagged formula judgment calls (percentile, chance-expected containment) pending Systems Engineer confirmation.
+- [DATA-OUT-302 backtest report structure](data_out_302_backtest_report_structure.md) — issue #22: BacktestResult already was the report row (vector<BacktestResult> = the report); third DATA-OUT-30x "struct already exists, add tagged test" case.
 
 ## Platform-specific notes
 
