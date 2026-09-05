@@ -18,6 +18,7 @@ in `.github/AGENT_LABELS.md`.
 - [LottoPicker scaffold](lottopicker_scaffold.md) — CMake layout, INTERFACE lib until first feature source, and the Windows-workflow hand-off note from Generate Code Base (issue #5).
 - [DATA-IN-100 CSV ingestion](data_in_100_csv_ingestion.md) — CsvIngestor/DrawRecord design, the row-numbering convention I picked (not fixed in docs), fatal-vs-per-row error split (issue #7).
 - [LottoPicker error handling](lottopicker_error_handling.md) — typed-exception pattern (UI-001, issue #6) to extend for future validation errors, plus a clang-format pointer-alignment gotcha.
+- [UI-002 config parsing](ui_002_config_parsing.md) — Config::parse design (issue #9), key-check-order/malformed-line choices I made, and a pre-existing CsvFormatError/LottoPickerError inheritance gap flagged for whoever wires ingestion into main().
 
 ## Platform-specific notes
 
