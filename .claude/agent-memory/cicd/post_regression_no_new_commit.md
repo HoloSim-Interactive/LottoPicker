@@ -74,3 +74,9 @@ landed directly on trunk (5f92a31), `issue-20` confirmed ancestor of
 no new status label (this hand-off arrived as
 `status:ready-for-commit`, not `status:ready-for-rtvm-update`, so
 just removed it rather than swapping in the other value).
+
+Confirmed a 9th time on issue #22 (DATA-OUT-302, 2026-09-05): original
+merge df2337c/v1.0.204, TE regression pass + SE's RTVM note landed
+directly on trunk (fbe111d), `issue-22` confirmed ancestor of `main`.
+Same handling; brief hand-back to `agent:systems-engineer` with
+`status:ready-for-rtvm-update`.
