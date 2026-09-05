@@ -68,4 +68,18 @@ public:
     explicit ModelStoreError(const std::string &message) : LottoPickerError(message) {}
 };
 
+// CORE-205: the requested `--backtest` (UI-003) sample date can't
+// actually be backtested against the supplied history -- either no
+// historical draw is dated exactly on it (nothing to hold out and
+// compare the ranked list against), or no draw is dated strictly
+// before it (no training data to build a truncated model from).
+// Distinct from CliUsageError, which only validates the `--backtest`
+// flag's date-list *syntax* (UI-003) -- this is a semantic problem
+// with how the date relates to the actual history, only knowable once
+// BacktestEngine::run looks at real history.
+class BacktestError : public LottoPickerError {
+public:
+    explicit BacktestError(const std::string &message) : LottoPickerError(message) {}
+};
+
 } // namespace lottopicker

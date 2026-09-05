@@ -35,6 +35,24 @@ public:
     // if a different one (e.g. a config key) is wanted later.
     static std::filesystem::path defaultModelPath(const std::filesystem::path &dataFile);
 
+    // Builds a fresh ModelArtifact directly from an already-ingested,
+    // already-era-tagged `history` -- CORE-200/201's raw scores run
+    // through CORE-206's normalization (docs/SDD.md's pipeline),
+    // exactly the construction loadOrBuild() runs internally on a
+    // rebuild. Exposed publicly (not just loadOrBuild's private
+    // implementation detail) so a caller that needs a throwaway,
+    // unpersisted model built from some *other* record set -- CORE-205's
+    // BacktestEngine, which builds one such model per truncated sample
+    // date, never persisting any of them -- doesn't have to duplicate
+    // this pipeline. `sourceHash` is stored as-is in the returned
+    // artifact's `sourceHash` field but is neither computed nor
+    // validated here; a caller with no real "source file" to hash (like
+    // BacktestEngine) may pass an empty string.
+    static ModelArtifact buildArtifact(const std::vector<DrawRecord> &history,
+                                       const std::string &sourceHash = "", int poolMin = kPoolMin,
+                                       int poolMax = kCurrentPoolMax,
+                                       int halfLifeDraws = kDefaultHalfLifeDraws);
+
     // Result of loadOrBuild(): the ready-to-use model, whether this
     // call rebuilt it (the "reused vs. recomputed" distinction
     // TP-CORE-204 part 1 checks the tool's output for), and any

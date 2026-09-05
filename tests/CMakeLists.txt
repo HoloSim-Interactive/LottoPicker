@@ -4,6 +4,7 @@
 # alongside its source file.
 add_executable(lottopicker_tests
     SmokeTest.cpp
+    BacktestEngineTest.cpp
     CompositeScorerTest.cpp
     CooccurrenceScorerTest.cpp
     ConfigTest.cpp
