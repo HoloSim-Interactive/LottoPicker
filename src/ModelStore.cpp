@@ -61,13 +61,16 @@ std::array<double, kGroupSizeCount> computeBaselineCooc(const std::vector<DrawRe
     return baseline;
 }
 
+} // namespace
+
 // Builds a fresh ModelArtifact from an already-ingested, already-era-
 // tagged `history` -- CORE-200/201's raw scores run through CORE-206's
 // normalization, per docs/SDD.md's pipeline. Only groups CooccurrenceScorer
 // actually observed are persisted (its sparse-storage contract, carried
 // through unchanged by normalization -- see PoolSizeNormalizer.h).
-ModelArtifact buildArtifact(const std::vector<DrawRecord> &history, const std::string &sourceHash,
-                            int poolMin, int poolMax, int halfLifeDraws) {
+ModelArtifact ModelStore::buildArtifact(const std::vector<DrawRecord> &history,
+                                        const std::string &sourceHash, int poolMin, int poolMax,
+                                        int halfLifeDraws) {
     ModelArtifact artifact;
     artifact.sourceHash = sourceHash;
     artifact.drawCount = history.size();
@@ -117,8 +120,6 @@ ModelArtifact buildArtifact(const std::vector<DrawRecord> &history, const std::s
     return artifact;
 }
 
-} // namespace
-
 std::string ModelStore::computeSourceHash(const std::filesystem::path &dataFile) {
     std::ifstream file(dataFile, std::ios::binary);
     if (!file.is_open()) {
@@ -157,7 +158,7 @@ ModelStore::LoadOrBuildResult ModelStore::loadOrBuild(const std::filesystem::pat
     LoadOrBuildResult result;
     result.wasRebuilt = true;
     result.ingestErrors = ingest.errors;
-    result.artifact = buildArtifact(history, currentHash, poolMin, poolMax, halfLifeDraws);
+    result.artifact = ModelStore::buildArtifact(history, currentHash, poolMin, poolMax, halfLifeDraws);
 
     ModelSerializer::write(result.artifact, modelPath);
     return result;
