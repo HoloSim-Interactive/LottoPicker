@@ -132,25 +132,25 @@ maps each RTVM ID to its GitHub issue number for traceability.
 
 | Step | RTVM ID(s) | Issue |
 | --- | --- | --- |
-| 1 | Generate Code Base | TBD |
-| 2 | UI-001 | TBD |
-| 3 | DATA-IN-100 | TBD |
-| 4 | CORE-207 | TBD |
-| 5 | UI-002 | TBD |
-| 6 | DATA-IN-101 | TBD |
-| 7 | CORE-200 | TBD |
-| 8 | CORE-201 | TBD |
-| 9 | UI-003 | TBD |
-| 10 | CORE-206 | TBD |
-| 11 | CORE-202 | TBD |
-| 12 | CORE-204 | TBD |
-| 13 | CORE-203 | TBD |
-| 14 | DATA-OUT-301 | TBD |
-| 15 | DATA-OUT-300 | TBD |
-| 16 | CORE-205 | TBD |
-| 17 | OUT-400 | TBD |
-| 18 | DATA-OUT-302 | TBD |
-| 19 | OUT-401 | TBD |
-| 20 | NFR-500 | TBD |
-| 21 | DELIV-900 | TBD |
-| 22 | DELIV-901 | TBD |
+| 1 | Generate Code Base | #5 |
+| 2 | UI-001 | #6 |
+| 3 | DATA-IN-100 | #7 |
+| 4 | CORE-207 | #8 |
+| 5 | UI-002 | #9 |
+| 6 | DATA-IN-101 | #10 |
+| 7 | CORE-200 | #11 |
+| 8 | CORE-201 | #12 |
+| 9 | UI-003 | #13 |
+| 10 | CORE-206 | #14 |
+| 11 | CORE-202 | #15 |
+| 12 | CORE-204 | #16 |
+| 13 | CORE-203 | #17 |
+| 14 | DATA-OUT-301 | #18 |
+| 15 | DATA-OUT-300 | #19 |
+| 16 | CORE-205 | #20 |
+| 17 | OUT-400 | #21 |
+| 18 | DATA-OUT-302 | #22 |
+| 19 | OUT-401 | #23 |
+| 20 | NFR-500 | #24 |
+| 21 | DELIV-900 | #25 |
+| 22 | DELIV-901 | #26 |
