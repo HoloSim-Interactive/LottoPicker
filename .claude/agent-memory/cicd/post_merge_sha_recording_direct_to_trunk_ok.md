@@ -34,3 +34,11 @@ the already-reported `f744a86`): correctly nothing to merge —
 `git merge-base --is-ancestor origin/issue-7 origin/main` true, no new
 tag. A `ready-for-commit` hand-off doesn't always mean CI/CD has work
 to do; sometimes it's just confirming an already-complete chain.
+
+Confirmed a third time on issue #6's (UI-001) second `ready-for-commit`
+round, this time following a full trunk merge + regression cycle
+(`8fd22b2`, tag `v1.0.54`) rather than an Inspection item: `cbed585`
+recorded Test Engineer's already-reported regression pass, `origin/main..origin/issue-6`
+was empty. Pattern generalizes across item types — check
+"is this SHA already reported, and is the branch diff empty" before
+assuming there's a merge to do.
