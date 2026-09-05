@@ -54,3 +54,20 @@ auto-merged cleanly) *plus* a memory-file (`software-engineer/MEMORY.md`)
 conflict, same keep-both resolution. Rebuilt full suite after every
 redo; only the final one mattered (23/23, combining both features'
 tests) since nothing was pushed until then.
+
+**Confirmed a 5th time on issue #10 (DATA-IN-101) merging 2026-09-05**:
+first merge attempt (against a stale local `main` one commit behind
+origin) hit the usual `src/CMakeLists.txt`/`tests/CMakeLists.txt`/
+`software-engineer/MEMORY.md` conflicts; aborted and fast-forwarded
+local `main` first this time rather than resolving against a base I
+already knew was behind. Redid the merge — same three conflicts,
+resolved keep-both/combine-list as usual, committed, but the push was
+*still* rejected because issue #9 (UI-002, a real feature merge) had
+landed in the gap between fetch and push. Reset to the new
+`origin/main` and redid the merge a third time — same conflict set
+plus UI-002's own `Config.cpp`/`ConfigTest.cpp` entries, resolved the
+same mechanical way. Lesson: fast-forwarding local `main` before the
+first merge attempt doesn't avoid the race, since the window that
+matters is between merge-commit and push, not before it — just accept
+that a redo-after-push-rejection is normal and don't try to pre-empt
+it.
