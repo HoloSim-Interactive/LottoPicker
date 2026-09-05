@@ -42,3 +42,13 @@ recorded Test Engineer's already-reported regression pass, `origin/main..origin/
 was empty. Pattern generalizes across item types — check
 "is this SHA already reported, and is the branch diff empty" before
 assuming there's a merge to do.
+
+Confirmed a fourth time on issue #11 (CORE-200), 2026-09-05, after a
+full trunk-merge + regression cycle (`5e7f0fc`, tag `v1.0.78`): SE's
+two follow-up edits (`d7b870a` marking Verified with the merge SHA,
+`15e036c` recording the regression pass) both landed on `main` after
+CI/CD's merge comment, both licensed. `origin/main..origin/issue-11`
+empty. Hand-off comment in this case, and in the issue #8 precedent,
+omitted a new status label entirely and went straight to
+`agent:systems-engineer` with no `status:*` add (step 6c is skippable
+when there's genuinely nothing to report beyond "already done").
