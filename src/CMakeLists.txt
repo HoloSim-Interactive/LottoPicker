@@ -10,7 +10,8 @@
 # UI-002; EraTable.cpp/EraTagger.cpp, RTVM DATA-IN-101; PoolSizeNormalizer.cpp,
 # RTVM CORE-206; CompositeScorer.cpp, RTVM CORE-202;
 # Sha256.cpp/ModelSerializer.cpp/ModelStore.cpp, RTVM CORE-204/DATA-OUT-301;
-# RankingEngine.cpp, RTVM CORE-203/DATA-OUT-300).
+# RankingEngine.cpp, RTVM CORE-203/DATA-OUT-300;
+# RankedListPresenter.cpp, RTVM OUT-400).
 # Add each new feature's .cpp here as it lands.
 add_library(lottopicker_lib STATIC
     CliArgs.cpp
@@ -24,6 +25,7 @@ add_library(lottopicker_lib STATIC
     ModelSerializer.cpp
     ModelStore.cpp
     PoolSizeNormalizer.cpp
+    RankedListPresenter.cpp
     RankingEngine.cpp
     Sha256.cpp
 )
