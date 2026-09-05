@@ -16,6 +16,7 @@ in `.github/AGENT_LABELS.md`.
 ## Architecture patterns
 
 - [LottoPicker scaffold](lottopicker_scaffold.md) — CMake layout, INTERFACE lib until first feature source, and the Windows-workflow hand-off note from Generate Code Base (issue #5).
+- [DATA-IN-100 CSV ingestion](data_in_100_csv_ingestion.md) — CsvIngestor/DrawRecord design, the row-numbering convention I picked (not fixed in docs), fatal-vs-per-row error split (issue #7).
 
 ## Platform-specific notes
 
