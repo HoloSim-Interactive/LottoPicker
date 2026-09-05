@@ -24,7 +24,7 @@ in `.github/AGENT_LABELS.md`.
 - [CORE-204 ModelStore](core_204_model_store.md) — first CLI pipeline wiring; manual 4-run recipe for TP-CORE-204's reused/rebuilt behavior since no shipped fixtures exist yet.
 - [CORE-203 RankingEngine](core_203_ranking_engine.md) — full-pool real runs take ~1min wall-clock, not a hang; open SDD v1/v2 model-format doc flag to recheck at RTVM-update time.
 - [DATA-OUT-300 ranked-list structure](data_out_300_ranked_list_structure.md) — issue #19: "already-shipped" RTVM items can still need a small new dedicated-tag/exact-fixture test, not always a no-diff pass; clang-format path gotcha noted.
-- [OUT-400 RankedListPresenter](out_400_ranked_list_presenter.md) — pure-presentation class, no ranking run needed; verified against a synthetic fixture and a real 3-draw CLI run.
+- [OUT-400 RankedListPresenter](out_400_ranked_list_presenter.md) — pure-presentation class, no ranking run needed; verified against a synthetic fixture and a real 3-draw CLI run; re-confirmed clean on the issue #21 post-merge trunk regression pass.
 - [CORE-205 BacktestEngine](core_205_backtest_engine.md) — issue #20: first pass FAIL on real clang-format regression (not path gotcha); re-verified PASS after `-i` fix, no logic change.
 
 ## Process notes
