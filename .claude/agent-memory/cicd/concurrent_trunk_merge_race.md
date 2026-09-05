@@ -95,3 +95,12 @@ plus, for the first time, *both* `software-engineer/MEMORY.md` and
 `test-engineer/MEMORY.md` conflicting in the same merge (previously
 only software-engineer's had come up alongside CMakeLists) — same
 keep-both resolution, no new pattern needed.
+
+**Issue #20 (CORE-205) merging 2026-09-05**: one push rejection against
+issue #21 (OUT-400)'s trunk-regression-confirmation doc/memory commits
+landing concurrently — reset via merging `origin/main` in (not a hard
+reset, since local already had the CORE-205 merge commit built), same
+`test-engineer/MEMORY.md` keep-both conflict, second push succeeded.
+Also see [[test_engineer_format_check_scope_gap]] for a real (not
+merge-conflict) issue found during this merge's own pre-push
+verification.
