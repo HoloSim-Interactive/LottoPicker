@@ -1,9 +1,18 @@
 ---
 name: core-205-backtest-engine
-description: TP-CORE-205 first-pass FAIL (clang-format only, logic correct) on issue #20 — hand-verified containment counts, manual CLI wiring, clang-format regression to watch for.
+description: TP-CORE-205 on issue #20 — first-pass FAIL was clang-format only (logic correct); re-verified PASS after `clang-format-18 -i` fix, commit 9589e10.
 metadata:
   type: project
 ---
+
+**Resolution (2026-09-05):** re-verified after Software Engineer ran
+`clang-format-18 -i` on both flagged files (commit `9589e10`, whitespace-
+only, 28+/26- lines). `clang-format-18 --dry-run -Werror` clean on all
+three files; rebuilt clean; full suite 80/80; `[CORE-205]` tag run
+directly (`lottopicker_tests "[CORE-205]" -s`) shows 5/5 cases, 27/27
+assertions. No functional change from the FAIL pass, so the earlier
+hand-verified containment math still stands. Handed to
+`agent:systems-engineer` for RTVM update.
 
 CORE-205 (`BacktestEngine::run`, issue #20, 2026-09-05): first pass was a
 FAIL, but only on the checked clang-format Coding Standard (docs/SDD.md),
