@@ -67,6 +67,14 @@ config path, even though it doesn't yet actually rank anything. Re-check
 this note once UI-002/CORE land — at that point "proceeds to ranking"
 should mean real ranking output, and the looser bar no longer applies.
 
+**CORE-201 pass (issue #12, 2026-09-05):** first CORE-2xx algorithm item to
+land (CooccurrenceScorer). Standard build/ctest command sufficed — no new
+harness needed. `tests/CooccurrenceScorerTest.cpp` maps 1:1 onto
+TP-CORE-201's two parts (pair-frequency ordering, extended to 3-/4-number
+groups); worth reading the test file directly against the TP text rather
+than trusting the pass count alone, since Catch2 tags (`[CORE-201]`) don't
+by themselves prove fixture values match the RTVM's literal example.
+
 **UI-001 regression pass, same issue #6, second hand-off (2026-09-05):**
 after CI/CD merged issue-6's 85b764f into `main` as 8fd22b2 (real merge
 commit this time, not fast-forward — trunk had moved from issue-7's
