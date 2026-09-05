@@ -34,4 +34,4 @@ in `.github/AGENT_LABELS.md`.
 
 ## Documentation index
 
-- [LottoPicker SDD decisions](lottopicker_sdd_decisions.md) — CORE-206 normalization method, unconfirmed FL rule-change date, CORE-207 summary location, UI-003 CLI flag, target-platform strategy, sparse-model decision. Check before revisiting these RTVM items.
+- [LottoPicker SDD decisions](lottopicker_sdd_decisions.md) — CORE-206 normalization method, unconfirmed FL rule-change date, CORE-207 summary location, UI-003 CLI flag, target-platform strategy, sparse-model decision, model-file v1→v2 versioning pattern (CORE-203). Check before revisiting these RTVM items.
