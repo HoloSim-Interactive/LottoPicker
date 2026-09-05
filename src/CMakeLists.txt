@@ -5,10 +5,11 @@
 # main()/argv.
 #
 # STATIC now that feature source files have landed (CliArgs.cpp, RTVM
-# UI-001; CsvIngestor.cpp, RTVM DATA-IN-100). Add each new feature's .cpp
-# here as it lands.
+# UI-001; CsvIngestor.cpp, RTVM DATA-IN-100; CooccurrenceScorer.cpp, RTVM
+# CORE-201). Add each new feature's .cpp here as it lands.
 add_library(lottopicker_lib STATIC
     CliArgs.cpp
+    CooccurrenceScorer.cpp
     CsvIngestor.cpp
 )
 target_include_directories(lottopicker_lib PUBLIC "${CMAKE_SOURCE_DIR}/include")
