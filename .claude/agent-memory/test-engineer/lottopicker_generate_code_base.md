@@ -86,6 +86,17 @@ includes issue-7's CsvIngestor suite), spot-recheck the specific TP steps
 directly against the trunk binary. Same hand-off shape even on a second
 pass through the same issue number.
 
+**CORE-201 regression pass on trunk, second hand-off (issue #12, 2026-09-05):**
+after CI/CD merged `issue-12`'s ed954a6 into `main`, SE recorded the SHA and
+CI/CD routed back for regression testing per the fast path above. Pulled
+`main` (b249751, fast-forwarded from ed954a6 through CORE-200's merge/RTVM
+commits too), reran the standard build/ctest command: 23/23 pass (up from
+17 — CORE-200's DecayScorer suite had landed on trunk in between). `git
+status` clean. Confirms the fast path generalizes even when unrelated work
+(CORE-200) merged to trunk between the original pass and the regression
+hand-off — just verify the full current suite, not only the item under
+regression.
+
 **CORE-200 DecayScorer pass (issue #11, 2026-09-05):** clean `issue-11`
 checkout, same build command, 16/16 ctest pass (10 pre-existing +
 6 new `DecayScorerTest.cpp`). TP-CORE-200's two fixture cases map to
