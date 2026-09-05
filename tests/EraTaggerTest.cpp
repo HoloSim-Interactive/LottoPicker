@@ -54,14 +54,15 @@ TEST_CASE("EraTagger falls back to the earliest era for a date before any bounda
 
 // Tagging with no explicit table uses the real documented one
 // (EraTable.h's eraTable()), exercised here against its two known
-// boundaries so a future correction to that table (per the open item
-// documented in EraTable.h) is caught by this test failing, not
-// silently.
+// boundaries so a future correction to that table is caught by this
+// test failing, not silently. The 1999-10-24 boundary itself is the
+// real-data-confirmed value (issue #27, see data/README.md), not a
+// hypothesis.
 TEST_CASE("EraTagger defaults to the real documented era table", "[DATA-IN-101]") {
     std::vector<DrawRecord> records = {
         DrawRecord{"1988-01-01", {1, 2, 3, 4, 5, 6}},
-        DrawRecord{"1998-12-31", {1, 2, 3, 4, 5, 6}},
-        DrawRecord{"1999-01-01", {1, 2, 3, 4, 5, 53}},
+        DrawRecord{"1999-10-23", {1, 2, 3, 4, 5, 6}},
+        DrawRecord{"1999-10-24", {1, 2, 3, 4, 5, 53}},
     };
 
     EraTagger::tag(records);

@@ -43,3 +43,20 @@ actually delivered into the repo/pipeline — implement everything that
 escalate specifically the missing artifact rather than blocking the
 whole feature or silently shipping the unconfirmed hypothesis as if
 confirmed.
+
+**Resolved (issue #27, 2026-09-05):** real data landed
+(`data/florida_lotto_full.csv`, 4018 records, provenance in
+`data/README.md`) and disproved the working hypothesis — the true
+boundary is `1999-10-24`, not `1999-01-01` (off by ~10 months; 84
+draws were being normalized against the wrong pool). Corrected
+`eraTable()` in place, one line, exactly as anticipated. Only one test
+needed updating: the single case that exercises `eraTable()`'s real
+default rather than a synthetic table
+(`tests/EraTaggerTest.cpp`, `"EraTagger defaults to the real
+documented era table"`) — grep for `eraTable()` usage repo-wide before
+assuming any other test is affected; every other era-related test
+(including all of `BacktestEngineTest.cpp`) builds its own synthetic
+`EraBoundary` vector and is untouched by a boundary-date correction.
+Recording the confirmed date in `docs/RTVM.md`/DELIV-900's tracking is
+Systems Engineer's call, not Software Engineer's — flagged back to
+them in the hand-off comment rather than editing RTVM.md directly.
