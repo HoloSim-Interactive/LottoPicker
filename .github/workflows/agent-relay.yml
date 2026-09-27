@@ -78,8 +78,8 @@ jobs:
     # runner serves this repo, so a long turn queues everything behind it;
     # 90 keeps a wedged run from monopolizing the runner for hours while
     # still giving real work room to finish.
-    # 180, raised from 90 (2026-08-28): issue #13's adoption round — nine
-    # confirmed clauses implemented plus a full re-measurement — was killed
+    # 180, raised from 90 (2026-08-28): issue #13's adoption round â€” nine
+    # confirmed clauses implemented plus a full re-measurement â€” was killed
     # by the 90-minute ceiling at 02:19Z mid-measurement. The 90 was chosen
     # when ONE agents runner served the repo and a wedged run monopolized
     # it; with two runners (client's 20X upgrade, 2026-08-27) a long turn
@@ -102,7 +102,7 @@ jobs:
           ROLE="${{ github.event.label.name }}"
           ROLE="${ROLE#agent:}"
           if [ -z "$ROLE" ]; then
-            echo "No agent role matched in this event — nothing to do."
+            echo "No agent role matched in this event â€” nothing to do."
             exit 1
           fi
           echo "role=$ROLE" >> "$GITHUB_OUTPUT"
@@ -149,26 +149,48 @@ jobs:
 
             You are acting as the ${{ steps.role.outputs.role }} on this
             project. Your responsibilities and communication rules are
-            defined in .claude/agents/${{ steps.role.outputs.role }}.md —
+            defined in .claude/agents/${{ steps.role.outputs.role }}.md â€”
             follow them.
+
+
+            SCRATCH FILES GO IN ONE PLACE, ALWAYS. Any temporary directory you
+            create -- a staged host project, a scratch clone, a probe build, a
+            log dump, anything you would not commit -- goes under:
+
+              C:\temp\agentTesting\<repo>\issue-<N>\<purpose>
+
+            On a machine where that is not the right root, $AGENT_TEMP holds it
+            instead; prefer $AGENT_TEMP when it is set and fall back to the
+            literal path above. Never invent a new top-level directory, never
+            put scratch beside the client's own folders in C:\temp, and never
+            leave it in the repo.
+
+            This is not tidiness. A janitor deletes idle directories under that
+            root automatically, and it can only protect the disk for paths it
+            owns: on 2026-09-26 the client deleted 386 folders and over 50 GB by
+            hand, across three projects, because every issue had invented its own
+            name and the cleaner matched none of them. If something must survive
+            longer than a few hours -- a manned test host the client will come
+            back to -- put it under C:\temp\agentTesting\_keep\, which is
+            never swept.
 
             1. Read issue #${{ steps.role.outputs.issue }} in full,
                including every comment, to understand the current state
                of this handoff.
             2. Read .claude/agent-memory/${{ steps.role.outputs.role }}/MEMORY.md
                for anything relevant you've learned on past issues.
-               It's an index of one-line summaries — if a line looks
+               It's an index of one-line summaries â€” if a line looks
                relevant to this task, open the file it links to for the
                full detail. Don't open files whose summaries don't
                apply; that's the whole point of the index.
             3. If this task touches one of the standard docs
                (docs/PROJECT_DEFINITION.md, docs/RTVM.md, docs/SDD.md,
                docs/IMPLEMENTATION_PLAN.md), check whether it already
-               exists before writing to it — every project starts with
+               exists before writing to it â€” every project starts with
                a pre-structured skeleton for these. Fill in that
                existing structure; don't replace it with something new.
             4. Do the work the issue is asking of you.
-            5. Post one comment on the issue before you finish — no
+            5. Post one comment on the issue before you finish â€” no
                matter what happened. This isn't conditional on
                success: if you completed the task, say what you did;
                if you hit an error, ran out of information you
@@ -179,20 +201,20 @@ jobs:
                structure in .github/AGENT_LABELS.md exactly: first
                line lists every intended reader and then identifies
                you, as "<Reader>[, <Reader>...], this is <Your role>:"
-               — the "this is" is required, since without it a second
+               â€” the "this is" is required, since without it a second
                reader is indistinguishable from the sender. Last line
                is a
                "**Next:**" status line. The Next line isn't
-               decoration — stall-recovery.yml parses it to route a
+               decoration â€” stall-recovery.yml parses it to route a
                recovered hand-off correctly, so get the exact format
                right.
-            6. Hand off. Run these as SEPARATE commands, in this order —
+            6. Hand off. Run these as SEPARATE commands, in this order â€”
                not combined into one. A single `gh issue edit` with
                several flags fails as a whole if any one label isn't
                present, which silently skips the hand-off and stalls
                the issue. Independent commands can't do that.
 
-                 # a) clear any pipeline-status label you inherited —
+                 # a) clear any pipeline-status label you inherited â€”
                  #    yours to clean up, or they accumulate across
                  #    every hand-off and contradict each other
                  for L in status:ready-for-test \
@@ -213,7 +235,7 @@ jobs:
                  gh issue edit ${{ steps.role.outputs.issue }} \
                    --add-label "status:<new-status>"   # omit if none applies
 
-                 # d) LAST — this is what triggers the next agent, so
+                 # d) LAST â€” this is what triggers the next agent, so
                  #    everything else must already be correct
                  gh issue edit ${{ steps.role.outputs.issue }} \
                    --add-label "agent:<next-role>"
@@ -222,17 +244,17 @@ jobs:
                role to agent:solutions-architect instead of the normal
                next step. Exception: if your role's own instructions
                say you're waiting on a human reply rather than handing
-               off to another role, follow that instead — just remove
+               off to another role, follow that instead â€” just remove
                "status:in-progress" and leave your own agent:* label in
                place, so nothing else gets triggered on this issue
                until they reply.
-            7. If you learned something durable — a pattern, a gotcha,
-               an architectural decision — record it. If it fits in one
+            7. If you learned something durable â€” a pattern, a gotcha,
+               an architectural decision â€” record it. If it fits in one
                line, add that line to your MEMORY.md index. If it needs
                real explanation, write a detail file next to MEMORY.md
                and add a one-line summary linking to it. See "Memory
                structure" in .github/AGENT_LABELS.md. Keep MEMORY.md
-               itself short — it's loaded on every future run.
+               itself short â€” it's loaded on every future run.
           # Model policy. Fable 5 is reserved for the small number of issues
           # whose difficulty is mathematical rather than mechanical, named as
           # a list so the switch is one edit. Currently #53 and #54, the v1.2
@@ -241,9 +263,9 @@ jobs:
           #
           # (client, 2026-08-27/28): Fable 5 was pinned for the
           # correctness core (#11/#12/#13). #11/#12 closed same-day, and one
-          # day of all-Fable relay burned 64% of the weekly Fable budget —
+          # day of all-Fable relay burned 64% of the weekly Fable budget â€”
           # so Fable is now scoped to #13 alone and every other issue runs
-          # Opus, which delivered #5–#15. When #13 closes, remove the
+          # Opus, which delivered #5â€“#15. When #13 closes, remove the
           # conditional entirely (all-Opus) unless the client re-pins.
           claude_args: |
             --agent ${{ steps.role.outputs.role }}
@@ -309,12 +331,12 @@ jobs:
 
           if echo "$RUN_LOG" | grep -qi "credit balance is too low"; then
             notify "$(cat <<'EOF'
-          **This run could not execute — the Anthropic API reported a credit-balance error.**
+          **This run could not execute â€” the Anthropic API reported a credit-balance error.**
 
           This usually means the account's API credit balance needs
           topping up at console.anthropic.com. It has also been reported
           for unrelated causes (e.g. an orphaned API key, where the
-          balance looks fine but the key/workspace link is broken) — if
+          balance looks fine but the key/workspace link is broken) â€” if
           the balance already looks fine there, try regenerating
           ANTHROPIC_API_KEY before assuming more funds are needed.
 
@@ -327,11 +349,11 @@ jobs:
 
           if echo "$RUN_LOG" | grep -qiE "authentication_error|authentication_failed|API key is invalid"; then
             notify "$(cat <<'EOF'
-          **This run could not execute — the Anthropic API rejected the key as invalid.**
+          **This run could not execute â€” the Anthropic API rejected the key as invalid.**
 
           ANTHROPIC_API_KEY is likely missing, mistyped, or revoked.
           Check Settings -> Secrets and variables -> Actions, and confirm
-          the key still exists at console.anthropic.com — regenerate it
+          the key still exists at console.anthropic.com â€” regenerate it
           if you're unsure.
 
           Once resolved, remove status:needs-human and re-add
@@ -343,7 +365,7 @@ jobs:
 
           if echo "$RUN_LOG" | grep -qi "permission_error"; then
             notify "$(cat <<'EOF'
-          **This run could not execute — the API key doesn't have access to the model it tried to use.**
+          **This run could not execute â€” the API key doesn't have access to the model it tried to use.**
 
           Check the key's workspace and organization model access at
           console.anthropic.com.
@@ -357,7 +379,7 @@ jobs:
 
           if echo "$RUN_LOG" | grep -qi "Could not fetch an OIDC token"; then
             notify "$(cat <<'EOF'
-          **This run could not execute — GitHub couldn't issue an OIDC token for the workflow.**
+          **This run could not execute â€” GitHub couldn't issue an OIDC token for the workflow.**
 
           This should already be fixed (id-token: write is set in
           agent-relay.yml's permissions), so seeing it again suggests
@@ -373,7 +395,7 @@ jobs:
 
           if echo "$RUN_LOG" | grep -qi "Workflow initiated by non-human actor"; then
             notify "$(cat <<'EOF'
-          **This run could not execute — claude-code-action rejected it because a bot, not a human, triggered it.**
+          **This run could not execute â€” claude-code-action rejected it because a bot, not a human, triggered it.**
 
           This should already be fixed (allowed_bots: "claude[bot]" is
           set in agent-relay.yml), so seeing it again suggests that
@@ -403,10 +425,10 @@ jobs:
           if echo "$RUN_LOG" | grep -qiE 'rate_limit_error|overloaded_error|"error":[[:space:]]*"overloaded"'; then
             if echo "$RUN_LOG" | grep -qi "rate_limit_error"; then
               ERROR_KIND="rate limit"
-              ERROR_DESC="The account is sending requests faster than its current usage tier allows — likely several issues running concurrently at once."
+              ERROR_DESC="The account is sending requests faster than its current usage tier allows â€” likely several issues running concurrently at once."
             else
               ERROR_KIND="service overload"
-              ERROR_DESC="Anthropic's API itself is temporarily overloaded — this is about their service capacity, not this account specifically."
+              ERROR_DESC="Anthropic's API itself is temporarily overloaded â€” this is about their service capacity, not this account specifically."
             fi
 
             CURRENT_LABELS="$(gh issue view ${{ steps.role.outputs.issue }} --json labels -q '.labels[].name')"
@@ -418,7 +440,7 @@ jobs:
 
             if (( NEXT_RETRY > 3 )); then
               gh issue comment ${{ steps.role.outputs.issue }} --body "$(cat <<EOF
-          **Automatic retry is giving up — this run has now failed 3 times in a row with a $ERROR_KIND error.**
+          **Automatic retry is giving up â€” this run has now failed 3 times in a row with a $ERROR_KIND error.**
 
           $ERROR_DESC
 
@@ -431,7 +453,7 @@ jobs:
           console.anthropic.com (Settings -> Limits), and whether several
           other issues are actively running right now and competing for
           the same per-minute request/token budget. If concurrency is the
-          cause, this may resolve on its own once other runs finish —
+          cause, this may resolve on its own once other runs finish â€”
           worth a look before assuming the tier itself needs raising.
 
           This is now status:needs-human rather than continuing to retry
@@ -455,12 +477,12 @@ jobs:
             esac
 
             gh issue comment ${{ steps.role.outputs.issue }} --body "$(cat <<EOF
-          **This run hit a $ERROR_KIND error — retrying automatically (attempt $NEXT_RETRY of 3).**
+          **This run hit a $ERROR_KIND error â€” retrying automatically (attempt $NEXT_RETRY of 3).**
 
           $ERROR_DESC
 
           This is expected to resolve on its own, so no action is needed
-          unless it keeps happening. Waiting ${DELAY}s before the retry —
+          unless it keeps happening. Waiting ${DELAY}s before the retry â€”
           the wait increases each attempt (30s, then 60s, then 120s) to
           give whatever caused this more room to clear. If this is still
           failing after attempt 3, it will stop retrying automatically
@@ -522,7 +544,7 @@ jobs:
               RESETS_HUMAN="$(date -u -d "@$RESETS_EPOCH" '+%Y-%m-%d %H:%M UTC' 2>/dev/null || echo "epoch $RESETS_EPOCH")"
             fi
             notify "$(cat <<EOF
-          **This run stopped partway through — the account's Claude usage window is exhausted, and overage is unavailable.**
+          **This run stopped partway through â€” the account's Claude usage window is exhausted, and overage is unavailable.**
 
           The session started normally and then died with no result:
           the rate-limit event reported \`overageStatus: rejected\`
@@ -547,20 +569,20 @@ jobs:
 
           if [[ -n "$IS_ERROR_LINE" ]]; then
             notify "$(cat <<EOF
-          **This run failed partway through — Claude Code reported an error result, but not one this workflow recognizes specifically.**
+          **This run failed partway through â€” Claude Code reported an error result, but not one this workflow recognizes specifically.**
 
           What's known from the run log: ${TURNS_LINE:-turn count unavailable}, ${COST_LINE:-cost unavailable}.
 
           A non-trivial cost alongside an error result usually means
           something failed partway through a real session rather than
-          at the very start — worth checking whether this coincided
+          at the very start â€” worth checking whether this coincided
           with hitting a spending limit mid-run, which can surface
           differently than the upfront credit-balance error this
           workflow already catches.
 
           Check the full run log (Actions -> this run -> "Run Claude
           Code as ${{ steps.role.outputs.role }}") for the exact cause
-          — this workflow can't pin it down automatically from here.
+          â€” this workflow can't pin it down automatically from here.
 
           Once resolved, remove status:needs-human and re-add
           agent:${{ steps.role.outputs.role }} to resume.
@@ -569,7 +591,7 @@ jobs:
             exit 0
           fi
 
-          echo "Claude Code failed for a reason not in the known list, and no result JSON was found either — failing normally."
+          echo "Claude Code failed for a reason not in the known list, and no result JSON was found either â€” failing normally."
           exit 1
 
       # SELF-DRIVING RELAY (NAADAP fix, 2026-09-03). The pipeline used to
