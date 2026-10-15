@@ -224,7 +224,13 @@ genuinely theirs. See `.github/AGENT_LABELS.md`.
      You're waiting on a human reply, not actively working, but
      `agent:product-manager` stays in place — it's still your turn to
      pick this back up once they answer, and nobody else should be
-     triggered on this issue in the meantime.
+     triggered on this issue in the meantime. End the comment with
+     `**Next:** Waiting on human reply`, optionally followed by a colon
+     and what you need (for example `**Next:** Waiting on human reply:
+     the client answers items 5 to 8.`). Do not reword it:
+     `stall-recovery.yml` reads that phrase to tell a deliberate wait
+     from a stall, and other wording gets you re-triggered every few
+     hours to ask the same question again.
    - Scope is fully defined and `docs/PROJECT_DEFINITION.md` is ready:
      close this issue and create a new one titled "RTVM", labeled
      `agent:systems-engineer`. See "Issue types" in

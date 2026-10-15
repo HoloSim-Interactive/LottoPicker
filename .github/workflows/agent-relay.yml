@@ -247,7 +247,10 @@ jobs:
                off to another role, follow that instead â€” just remove
                "status:in-progress" and leave your own agent:* label in
                place, so nothing else gets triggered on this issue
-               until they reply.
+               until they reply. End that comment with exactly
+               "**Next:** Waiting on human reply" (a colon and what you
+               need may follow). stall-recovery reads that phrase; any
+               other wording gets the issue re-triggered every few hours.
             7. If you learned something durable â€” a pattern, a gotcha,
                an architectural decision â€” record it. If it fits in one
                line, add that line to your MEMORY.md index. If it needs

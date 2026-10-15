@@ -147,12 +147,42 @@ gh issue list --state open --limit 200 --repo "$REPO" \
 
       # Deliberately waiting on a human -- not stalled. Clear only the false
       # in-progress flag, leave ownership untouched, don't retrigger.
-      if grep -qi 'waiting on human reply' <<< "$NEXT_LINE"; then
+      #
+      # The convention is "**Next:** Waiting on human reply"
+      # (.github/AGENT_LABELS.md), but agents drift from it. Retopo #41 and
+      # #44 (2026-10-14) ended "**Next:** Client supplies ..." and "**Next:**
+      # Client answers ...", missed the literal test, and were retriggered
+      # about every four hours only to ask the client the same question
+      # again. So besides the literal phrase (anywhere, as before), accept a
+      # Next line that STARTS with "Waiting on a/the human/client", or that
+      # starts with "Client" and backticks no agent:* role. Both are anchored
+      # to the start: a hand-off that mentions the client mid-line ("...;
+      # 5 to 8 are still waiting on the client") is not a wait.
+      NEXT_BODY=$(sed -E 's/^\*\*Next:\*\* *//' <<< "$NEXT_LINE")
+      if grep -qi 'waiting on human reply' <<< "$NEXT_LINE" \
+         || grep -qiE '^waiting on (a |the )?(human|client)' <<< "$NEXT_BODY" \
+         || { [[ -z "$DECLARED" ]] && grep -qiE '^(the )?client([ ,:;.(]|$)' <<< "$NEXT_BODY"; }; then
+        IS_WAIT=true
+        # status:in-progress set AFTER the wait comment means a run started
+        # since (the client resumed by relabeling without commenting) and
+        # died without posting. That is a stall, not a false flag: fall
+        # through to the normal retrigger. If the events cannot be read,
+        # keep the clear-only behavior.
         if [[ -n "$HAS_IN_PROGRESS" ]]; then
-          run gh issue edit "$NUMBER" --repo "$REPO" --remove-label "status:in-progress"
+          IP_AT=$(gh api "repos/$REPO/issues/$NUMBER/events?per_page=100" --paginate \
+            --jq '.[] | select(.event=="labeled" and .label.name=="status:in-progress") | .created_at' 2>/dev/null | tail -1)
+          if [[ -n "$IP_AT" ]] && (( $(date -u -d "$IP_AT" +%s) > $(date -u -d "$LAST_TIME" +%s) )); then
+            IS_WAIT=false
+            echo "  -> in-progress set after the wait comment (a resume run died); retriggering" >> "$REPORT"
+          fi
         fi
-        echo "  -> waiting on human reply; cleared stale flags only, no retrigger" >> "$REPORT"
-        continue
+        if $IS_WAIT; then
+          if [[ -n "$HAS_IN_PROGRESS" ]]; then
+            run gh issue edit "$NUMBER" --repo "$REPO" --remove-label "status:in-progress"
+          fi
+          echo "  -> waiting on the client; cleared stale flags only, no retrigger" >> "$REPORT"
+          continue
+        fi
       fi
 
       # --- Choose ONE position label, and choose it together with the

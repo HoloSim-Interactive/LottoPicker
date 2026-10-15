@@ -446,7 +446,13 @@ if you're keeping the issue and moving to your own next step, or
 **Next:** Waiting on human reply
 ```
 for the one case where nobody should be triggered until the client
-answers.
+answers. It may be followed by a colon and what you need from the
+client (`**Next:** Waiting on human reply: the client answers items 5
+to 8.`), but the phrase itself stays as written. `stall-recovery.yml`
+also treats a Next line that starts with "Waiting on the client", or
+starts with "Client" and names no `agent:*` role, as a wait, as a
+safety net for drifted wording; do not rely on it (Retopo #41 and #44 were re-triggered every few hours on
+2026-10-14 before that net existed).
 
 ### Scoped brevity protocol (client directive, 2026-09-02)
 
